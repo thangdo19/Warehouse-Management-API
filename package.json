@@ -1,0 +1,22 @@
+{
+  "name": "new-warehouse-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "joi": "^17.2.1",
+    "lodash": "^4.17.20",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.2.4",
+    "sequelize": "^6.3.5"
+  }
+}
