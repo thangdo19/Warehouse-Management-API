@@ -33,7 +33,7 @@ const PermissionDetail = sequelize.define('PermissionDetail', {
  */
 function validatePermissionDetail(req, res, next) {
   const schema = Joi.object({
-    permissionId: Joi.number(),
+    permissionId: Joi.number().required(),
     actionCode: Joi.string().max(255),
     actionName: Joi.string().max(255),
     checkAction: Joi.boolean().optional(),
@@ -51,6 +51,49 @@ function validatePermissionDetail(req, res, next) {
   else next() // no errors
 }
 
+/**
+ * @Usage Validate permission detail as a middleware for PATCH
+ */
+function validatePatchDetail(req, res, next) {
+  const schema = Joi.object({
+    actionCode: Joi.string().max(255),
+    actionName: Joi.string().max(255),
+    checkAction: Joi.boolean(),
+  })
+  // seek for error
+  const { error } = schema.validate(req.body, {
+    presence: 'optional',
+    abortEarly: false
+  })
+  // response when having error
+  if (error) return res.json({ 
+    statusCode: 400, 
+    message: error.message 
+  })
+  else next() // no errors
+}
+
+/**
+ * @Usage This middleware is used to change check action of permission details
+ */
+function validateActions(req, res, next) {
+  const schema = Joi.object({
+    actionNames: Joi.array().items(Joi.string().max(255)),
+    havePermission: Joi.boolean()
+  })
+  const { error } = schema.validate(req.body, {
+    presence: 'required',
+    abortEarly: false
+  })
+  if (error) return res.json({ status: 400, message: error.message });
+  next()
+}
+
+/**
+ * @Usage Add a set of actions into permission
+ * @param {*} perId id of permission which we want to add a set of actions
+ * @param {*} transaction transaction reference
+ */
 async function addDetails(perId, transaction) {
   const actionNames = [
     'CREATE_USER', 'VIEW_USER', 'EDIT_USER', 'DELETE_USER',
@@ -61,9 +104,14 @@ async function addDetails(perId, transaction) {
   }
 }
 
-async function createDetail(permissionId, actionName) {
+/**
+ * @Usage Return a plain object of permission detail's properties
+ * @param {*} perId Id of permission which we want to add details
+ * @param {*} actionName Name of action
+ */
+async function createDetail(perId, actionName) {
   const detail = {
-    permissionId: permissionId,
+    permissionId: perId,
     actionCode: actionName.split('_')[0],
     actionName: actionName,
     checkAction: 0
@@ -75,6 +123,8 @@ async function createDetail(permissionId, actionName) {
 module.exports = {
   PermissionDetail,
   validatePermissionDetail,
+  validatePatchDetail,
+  validateActions,
   createDetail,
   addDetails
 }

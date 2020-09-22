@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const auth = require('../routes/auth')
 const users = require('../routes/users')
 const permissions = require('../routes/permissions')
 const error = require('../middlewares/error-handler-middleware')
@@ -10,6 +11,8 @@ const error = require('../middlewares/error-handler-middleware')
 module.exports = function(app) {
   app.use(express.json())
   app.use(morgan('dev'))
+  // auth
+  app.use('/auth', auth)
   // route handlers
   app.use('/users', users)
   app.use('/permissions', permissions)

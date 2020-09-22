@@ -29,7 +29,7 @@ const User = sequelize.define('User', {
     }
   },
   password: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(1024),
     allowNull: false
   },
   address: {
@@ -58,7 +58,26 @@ function validateUser(req, res, next) {
   else next() // no errors
 }
 
+/**
+ * @Usage Validate user permissions as a middleware
+ */
+function validateUserPermission(req, res, next) {
+  const schema = Joi.object({
+    userId: Joi.number(),
+    permissionIds: Joi.array().items(Joi.number())
+  })
+  // seek for error
+  const { error } = schema.validate(req.body, {
+    presence: (req.method !== 'PATCH') ? 'required': 'optional',
+    abortEarly: false
+  })
+  // response when having error
+  if (error) return res.json({ statusCode: 400, message: error.message })
+  else next() // no errors
+}
+
 module.exports = {
   User,
-  validateUser
+  validateUser,
+  validateUserPermission
 }
