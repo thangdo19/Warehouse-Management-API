@@ -4,7 +4,7 @@ const sequelize = require('../db/connection')
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.INTEGER(11),
+    type: DataTypes.INTEGER(),
     primaryKey: true,
     autoIncrement: true
   },
@@ -13,7 +13,7 @@ const User = sequelize.define('User', {
     allowNull: false
   },
   phone: {
-    type: DataTypes.STRING(11),
+    type: DataTypes.STRING(),
     allowNull: false,
     unique: true,
     validate: {
