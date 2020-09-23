@@ -5,6 +5,8 @@ const express = require('express')
 const router = express.Router()
 const sequelize = require('../db/connection')
 const bcrypt = require('bcrypt')
+const { auth } = require('../middlewares/auth')
+const { checkAction } = require('../middlewares/check-action')
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
@@ -16,7 +18,11 @@ router.get('/', async (req, res) => {
   })
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (req, res) => {
+  return res.json({ yia: 'pass'})
+})
+
+router.get('/:id', [auth], async (req, res) => {
   const user = await User.findOne({ where: { id: req.params.id }})
   if (!user) return res.json({
     statusCode: 404,
