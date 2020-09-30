@@ -13,16 +13,10 @@ const Product = sequelize.define('Product', {
   },
   name: {
     type: DataTypes.STRING(255),
-    allowNull: false
-  },
+    allowNull: false,
+  }, 
   note: {
     type: DataTypes.STRING(255),
-  },
-  stock: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    validate: { min: 0 }
   },
 }, {
   tableName: 'products'
@@ -38,6 +32,7 @@ function validateProduct(req, res, next) {
     name: Joi.string().max(255),
     note: Joi.string().max(255).optional(),
     stock: Joi.number(),
+    actionType: Joi.string().valid('IMPORT', 'EXPORT')
   })
   // seek for error
   const { error } = schema.validate(req.body, {

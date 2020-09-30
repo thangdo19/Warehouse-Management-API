@@ -12,7 +12,13 @@ const WarehouseProduct = sequelize.define('WarehouseProduct', {
   },
   productId: {
     type: DataTypes.INTEGER()
-  }
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: { min: 0 }
+  },
 }, {
   tableName: 'warehouse_products'
 })
