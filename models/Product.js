@@ -1,5 +1,6 @@
 const sequelize = require('../db/connection')
 const { DataTypes } = require('sequelize')
+const Joi = require('joi')
 
 const Product = sequelize.define('Product', {
   id: {
@@ -8,9 +9,6 @@ const Product = sequelize.define('Product', {
     autoIncrement: true
   },
   categoryId: {
-    type: DataTypes.INTEGER
-  },
-  warehouseId: {
     type: DataTypes.INTEGER
   },
   name: {
@@ -23,12 +21,35 @@ const Product = sequelize.define('Product', {
   stock: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
+    validate: { min: 0 }
   },
 }, {
   tableName: 'products'
 })
 
+/**
+ * @Usage Validate product as a middleware
+ */
+function validateProduct(req, res, next) {
+  const schema = Joi.object({
+    categoryId: Joi.number(),
+    warehouseId: Joi.number(),
+    name: Joi.string().max(255),
+    note: Joi.string().max(255).optional(),
+    stock: Joi.number(),
+  })
+  // seek for error
+  const { error } = schema.validate(req.body, {
+    presence: (req.method !== 'PATCH') ? 'required' : 'optional',
+    abortEarly: false
+  })
+  // response when having error
+  if (error) return res.json({ statusCode: 400, message: error.message })
+  else next() // no error
+}
+
 module.exports = {
-  Product
+  Product,
+  validateProduct
 }

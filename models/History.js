@@ -1,5 +1,6 @@
 const sequelize = require('../db/connection')
 const { DataTypes } = require('sequelize')
+const Joi = require('joi')
 
 const History = sequelize.define('History', {
   id: {
@@ -14,8 +15,9 @@ const History = sequelize.define('History', {
     type: DataTypes.INTEGER
   },
   date: {
-    type: DataTypes.DATEONLY(),
-    allowNull: false
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: new Date()
   },
   note: {
     type: DataTypes.STRING(255),
@@ -24,6 +26,27 @@ const History = sequelize.define('History', {
   tableName: 'histories'
 })
 
+/**
+ * @Usage Validate history as a middleware
+ */
+function validateHistory(req, res, next) {
+  const schema = Joi.object({
+    typeId: Joi.number(),
+    warehouseId: Joi.number(),
+    date: Joi.date().optional(),
+    note: Joi.string().max(255).optional()
+  })
+  // seek for error
+  const { error } = schema.validate(req.body, {
+    presence: (req.method !== 'PATCH') ? 'required' : 'optional',
+    abortEarly: false
+  })
+  // response when having error
+  if (error) return res.json({ statusCode: 400, message: error.message })
+  else next() // no error
+}
+
 module.exports = {
-  History
+  History,
+  validateHistory
 }
