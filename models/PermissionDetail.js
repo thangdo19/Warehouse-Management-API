@@ -33,7 +33,7 @@ const PermissionDetail = sequelize.define('PermissionDetail', {
  */
 function validatePermissionDetail(req, res, next) {
   const schema = Joi.object({
-    permissionId: Joi.number().required(),
+    permissionId: Joi.number(),
     actionCode: Joi.string().max(255),
     actionName: Joi.string().max(255),
     checkAction: Joi.boolean().optional(),

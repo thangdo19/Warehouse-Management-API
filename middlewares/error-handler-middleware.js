@@ -6,6 +6,7 @@ module.exports = function(err, req, res, next) {
   console.log('Error:', err)
   return res.json({
     statusCode: 500,
-    message: 'Internal server error'
+    message: 'Internal server error',
+    error: err.message
   })
 }
