@@ -1,9 +1,9 @@
 'use strict';
 const faker = require('faker')
 
-const categories = [...Array(50)].map((category)=>({
-  name:faker.commerce.productMaterial(),
-  description:faker.commerce.productDescription(),
+const categories = [...Array(10)].map((category)=>({
+  name:faker.lorem.word(),
+  description:faker.vehicle.type(),
   createdAt:new Date(),
   updatedAt:new Date()
 }))
