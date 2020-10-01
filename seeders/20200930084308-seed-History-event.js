@@ -1,8 +1,8 @@
 'use strict';
 const faker = require('faker')
 const histories = [...Array(300)].map((history)=>({
-  typeId:Math.floor(Math.random() * 1 + 1),
-  warehouseId:Math.floor(Math.random() * 99 + 1),
+  typeId:Math.floor(Math.random() * 2 + 1),
+  warehouseId:Math.floor(Math.random() * 150 + 1),
   date:new Date(),
   note:faker.lorem.sentence(),
   createdAt:new Date(),
