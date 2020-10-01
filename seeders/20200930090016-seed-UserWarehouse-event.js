@@ -2,8 +2,8 @@
 
 const faker = require('faker')
 const user_warehouses = [...Array(100)].map((user_history)=>({
-  userId:Math.floor(Math.random() * 250 + 1),
-  warehouseId:Math.floor(Math.random() * 100 + 1),
+  userId:Math.floor(Math.random() * 190 + 1),
+  warehouseId:Math.floor(Math.random() * 190 + 1),
   createdAt:new Date(),
   updatedAt:new Date()
 }))
