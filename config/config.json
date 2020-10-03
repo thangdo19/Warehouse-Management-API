@@ -3,7 +3,7 @@
     "username": "root",
     "password": "root",
     "database": "warehouse",
-    "logging":true,
+    "logging":false,
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
