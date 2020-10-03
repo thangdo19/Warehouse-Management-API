@@ -6,6 +6,8 @@ const { Product, validateProduct } = require('../models/Product')
 const { Category, validateCategory } = require('../models/Category')
 const { Warehouse } = require('../models/Warehouse')
 const { WarehouseProduct } = require('../models/WarehouseProduct')
+const { HistoryType } = require('../models/HistoryType')
+const { History } = require('../models/History')
 
 router.get('/', async (req, res) => {
   const products = await Product.findAll({
@@ -47,43 +49,16 @@ router.post('/', [validateProduct], async (req, res) => {
     if (!product) {
       // if user want to export a product not exist, response
       if (actionType === 'EXPORT') return res.json({ statusCode: 400, message: 'Product not found. Cannot export'})
-      // create product & add relationship to warehouse
-      product = await Product.create(req.body, { transaction: transaction })
-      const warehProd = await warehouse.addProduct(product.id, { 
-        transaction: transaction,
-        through: { stock: req.body.stock } 
-      })
+      const warehProd = await createNewProductAndAddRelationship(req, transaction, warehouse)
+      // create history, commit & response
+      await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
       await transaction.commit()
       return res.json({ statusCode: 201, data: warehProd })
-      // console.log('Get products of warehouse:', await warehouse.getProducts())
     }
-    // find relationship between warehouse & product
-    let warehProd = await WarehouseProduct.findOne({
-      where: {
-        warehouseId: warehouse.id,
-        productId: product.id
-      }
-    })
-    // if warehouse not connected with product, add relationship here
-    /** This is used when the system already have the product, but the current warehouse
-    doesn't have this product */
-    if (!warehProd) {
-      warehProd = (await warehouse.addProduct(product.id, { transaction: transaction }))[0]
-      console.log('After:', warehProd)
-    }
-    // update stock
-    if (actionType === 'IMPORT') {
-      warehProd = await warehProd.update({ stock: warehProd.stock + req.body.stock }, {
-        transaction: transaction
-      })
-    }
-    else if (actionType == 'EXPORT') {
-      if (warehProd.stock < req.body.stock) return res.json({ statusCode: 400, message: 'Not enough stock to export'})
-      warehProd = await warehProd.update({ stock: warehProd.stock - req.body.stock }, {
-        transaction: transaction
-      })
-    }
-    // done, commit transaction & response
+    // handle stock when import/export from warehouse
+    const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
+    // done, create history, commit transaction & response
+    await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
     await transaction.commit()
     return res.json({ statusCode: 200, data: warehProd })
   } 
@@ -105,5 +80,72 @@ router.post('/categories', [validateCategory], async (req, res) => {
     return res.json({ statusCode: 400, message: error.message })
   }
 })
+
+async function createWarehouseHistory(actionType, warehouseId, note) {
+  const type = await HistoryType.findOne({ where: { name: actionType } })
+  await History.create({
+    typeId: type.id,
+    warehouseId,
+    note
+  })
+}
+
+/**
+ * @Usage This function create a new product with data from req param,
+ * then create WarehouseProduct middle table between Product & Warehouse and
+ * fill with stock prop
+ * @param {*} req Request reference
+ * @param {*} transaction Transaction reference
+ * @param {*} warehouse Warehouse reference to add relation with
+ */
+async function createNewProductAndAddRelationship(req, transaction, warehouse) {
+  try {
+    // create product & add relationship to warehouse
+    product = await Product.create(req.body, { transaction: transaction })
+    const warehProd = await warehouse.addProduct(product.id, { 
+      transaction: transaction,
+      through: { stock: req.body.stock } 
+    })
+    return warehProd
+  } 
+  catch (error) {
+    throw error
+  }
+}
+
+async function updateStock(req, transaction, warehouse, product, actionType) {
+  try {
+    // find relationship between warehouse & product
+    let warehProd = await WarehouseProduct.findOne({
+      where: {
+        warehouseId: warehouse.id,
+        productId: product.id
+      }
+    })
+    // if warehouse not connected with product, add relationship here
+    /** This is used when the system already have the product, but the current warehouse
+    doesn't have this product */
+    if (!warehProd) {
+      warehProd = (await warehouse.addProduct(product.id, { transaction: transaction }))[0]
+    }
+    // update stock
+    if (actionType === 'IMPORT') {
+      warehProd = await warehProd.update({ stock: warehProd.stock + req.body.stock }, {
+        transaction: transaction
+      })
+    }
+    else if (actionType == 'EXPORT') {
+      if (warehProd.stock < req.body.stock) return res.json({ statusCode: 400, message: 'Not enough stock to export'})
+      warehProd = await warehProd.update({ stock: warehProd.stock - req.body.stock }, {
+        transaction: transaction
+      })
+    }
+
+    return warehProd
+  } 
+  catch (error) {
+    throw error
+  }
+}
 
 module.exports = router
