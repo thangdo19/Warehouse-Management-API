@@ -23,8 +23,7 @@
                             "$ref": "#/definitions/Users"
                         }
                     }
-                    
-                    
+
                 }
             },
             "post": {
@@ -49,7 +48,7 @@
                             "$ref": "#/definitions/User"
                         }
                     },
-                    "400":{
+                    "400": {
                         "description": "Cannot create user"
                     }
                 }
@@ -76,7 +75,7 @@
                             "$ref": "#/definitions/User"
                         }
                     },
-                    "404":{
+                    "404": {
                         "description": "User {:id} cannot be found"
                     }
                 }
@@ -101,14 +100,14 @@
                             "$ref": "#/definitions/User"
                         }
                     },
-                    "404":{
+                    "404": {
                         "description": "User {:id} cannot be found"
                     }
                 }
             }
 
         },
-        "/permissions":{
+        "/permissions": {
             "get": {
                 "tags": ["Users"],
                 "summary": "Get all users permissions in system",
@@ -119,8 +118,7 @@
                             "$ref": "#/definitions/Permission"
                         }
                     }
-                    
-                    
+
                 }
             }
         }
@@ -136,7 +134,7 @@
                 "name": {
                     "type": "string"
                 },
-                
+
                 "phone": {
                     "type": "string"
                 },
@@ -174,7 +172,8 @@
                     "type": "string"
                 }
             }
-        },"Permission":{
+        },
+        "Permission": {
             "required": [
                 "id", "permissionName"
             ],
@@ -186,7 +185,7 @@
                 "permissionName": {
                     "type": "string"
                 }
-            } 
+            }
         }
     },
     "schemes": ["http"],

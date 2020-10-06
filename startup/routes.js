@@ -9,14 +9,16 @@ const products = require('../routes/products')
 const error = require('../middlewares/error-handler-middleware')
 
 const swaggerUi = require('swagger-ui-express'),
-swaggerDocument = require('../swagger.json');
+swaggerDocumentUser = require('../swagger/swagger-user.json');
+swaggerDocumentProduct = require('../swagger/swagger-product.json');
 /**
  * @Usage Add middlewares and route handlers
  * @param {*} app Application reference
  */
 module.exports = function(app) {
   
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/api-docs-user', swaggerUi.serve, swaggerUi.setup(swaggerDocumentUser));//swagger for user
+  app.use('/api-docs-product', swaggerUi.serve, swaggerUi.setup(swaggerDocumentProduct));//swagger for product
   app.use(express.json())
   app.use(morgan('dev'))
   // auth
