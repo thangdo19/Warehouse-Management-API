@@ -1,0 +1,196 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                    
+                    
+                }
+            },
+            "post": {
+                "tags": ["Users"],
+                "summary": "Create new user in system",
+                "description": "Create new user in system",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400":{
+                        "description": "Cannot create user"
+                    }
+                }
+            }
+
+        },
+        "/users/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of user that we want to find",
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "summary": "Delete user with given ID",
+                "tags": ["Users"],
+                "responses": {
+                    "200": {
+                        "description": "User is deleted",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404":{
+                        "description": "User {:id} cannot be found"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update user with give ID",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User with new values of properties",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User is updated",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404":{
+                        "description": "User {:id} cannot be found"
+                    }
+                }
+            }
+
+        },
+        "/permissions":{
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users permissions in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Permission"
+                        }
+                    }
+                    
+                    
+                }
+            }
+        }
+
+    },
+    "definitions": {
+        "User": {
+            "required": [
+                "name", "id", "email", "phone"
+            ],
+            "properties": {
+
+                "name": {
+                    "type": "string"
+                },
+                
+                "phone": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "Users": {
+            "type": "array",
+            "$ref": "#/definitions/User"
+        },
+        "UpdateUser": {
+            "required": [
+                "name", "id", "email", "phone", "password"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                }
+            }
+        },"Permission":{
+            "required": [
+                "id", "permissionName"
+            ],
+            "properties": {
+                "$ref": "#/definitions/User",
+                "id": {
+                    "type": "string"
+                },
+                "permissionName": {
+                    "type": "string"
+                }
+            } 
+        }
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+
+}
