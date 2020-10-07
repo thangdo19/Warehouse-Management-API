@@ -20,6 +20,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
+                            
                             "$ref": "#/definitions/Products"
                         }
                     }
@@ -27,7 +28,7 @@
                 }
             },
             "post": {
-                "tags": ["Users"],
+                "tags": ["Products"],
                 "summary": "Create new user in system",
                 "description": "Create new user in system",
                 "parameters": [
@@ -55,7 +56,7 @@
             }
 
         },
-        "/users/{id}": {
+        "/Products/{id}": {
             "parameters": [
                 {
                     "name": "id",
@@ -67,7 +68,7 @@
             ],
             "delete": {
                 "summary": "Delete user with given ID",
-                "tags": ["Users"],
+                "tags": ["Products"],
                 "responses": {
                     "200": {
                         "description": "User is deleted",
@@ -82,7 +83,7 @@
             },
             "patch": {
                 "summary": "Update user with give ID",
-                "tags": ["Users"],
+                "tags": ["Products"],
                 "parameters": [
                     {
                         "name": "user",
@@ -109,8 +110,8 @@
         },
         "/permissions": {
             "get": {
-                "tags": ["Users"],
-                "summary": "Get all users permissions in system",
+                "tags": ["Products"],
+                "summary": "Get all Products permissions in system",
                 "responses": {
                     "200": {
                         "description": "OK",
