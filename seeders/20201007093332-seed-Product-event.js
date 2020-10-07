@@ -1,17 +1,16 @@
 'use strict';
 const faker = require('faker')
-const histories = [...Array(300)].map((history)=>({
-  typeId:Math.floor(Math.random() * 2 + 1),
-  warehouseId:Math.floor(Math.random() * 99 + 1),
-  date:new Date(),
+// const bcrypt = require('bcrypt')
+const products = [...Array(200)].map((product)=>({
+  categoryId:parseInt(Math.floor(Math.random() *5) + 1),
+  name:faker.commerce.productName(),
   note:faker.lorem.sentence(),
   createdAt:new Date(),
   updatedAt:new Date()
 }))
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert("histories",histories)
-
+    return queryInterface.bulkInsert("products",products)
   },
 
   down: async (queryInterface, Sequelize) => {
