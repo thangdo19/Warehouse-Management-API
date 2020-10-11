@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: products })
-})
+})//oke swagger
 
 router.get('/categories', async (req, res) => {
   const categories = await Category.findAll({
@@ -30,7 +30,7 @@ router.get('/categories', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: categories })
-})
+})//oke swagger
 
 /**
  * @Usage This route is used for 2 purposes: 
@@ -70,7 +70,7 @@ router.post('/', [validateProduct], async (req, res) => {
       message: error.message
     })
   }
-})
+})//oke
 
 router.post('/categories', [validateCategory], async (req, res) => {
   try {
@@ -79,7 +79,7 @@ router.post('/categories', [validateCategory], async (req, res) => {
   } catch (error) {
     return res.json({ statusCode: 400, message: error.message })
   }
-})
+})//oke swagger
 
 async function createWarehouseHistory(actionType, warehouseId, note) {
   const type = await HistoryType.findOne({ where: { name: actionType } })

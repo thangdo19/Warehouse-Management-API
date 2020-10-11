@@ -20,7 +20,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            
+
                             "$ref": "#/definitions/Products"
                         }
                     }
@@ -29,15 +29,15 @@
             },
             "post": {
                 "tags": ["Products"],
-                "summary": "Create new user in system",
+                "summary": "Create new product in system",
                 "description": "Create new user in system",
                 "parameters": [
                     {
                         "name": "user",
                         "in": "body",
-                        "description": "User that we want to create",
+                        "description": "product that we want to create",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/AddProduct"
                         }
                     }
                 ],
@@ -65,61 +65,48 @@
                     "description": "ID of user that we want to find",
                     "type": "integer"
                 }
-            ],
-            "delete": {
-                "summary": "Delete user with given ID",
-                "tags": ["Products"],
-                "responses": {
-                    "200": {
-                        "description": "User is deleted",
-                        "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "404": {
-                        "description": "User {:id} cannot be found"
-                    }
-                }
-            },
-            "patch": {
-                "summary": "Update user with give ID",
-                "tags": ["Products"],
-                "parameters": [
-                    {
-                        "name": "user",
-                        "in": "body",
-                        "description": "User with new values of properties",
-                        "schema": {
-                            "$ref": "#/definitions/UpdateUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User is updated",
-                        "schema": {
-                            "$ref": "#/definitions/User"
-                        }
-                    },
-                    "404": {
-                        "description": "User {:id} cannot be found"
-                    }
-                }
-            }
+            ]
 
         },
-        "/permissions": {
+        "/products/categories": {
             "get": {
-                "tags": ["Products"],
-                "summary": "Get all Products permissions in system",
+                "tags": ["Categories"],
+                "summary": "Get all product by categories permissions in system",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Permission"
+                            "$ref": "#/definitions/Categories"
                         }
                     }
 
+                }
+            },
+            "post": {
+                "tags": ["Categories"],
+                "summary": "Create new categories in system",
+                "description": "Create new categories in system",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "body",
+                        "description": "Category that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddCategory"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "201": {
+                        "description": "New category is created",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create category"
+                    }
                 }
             }
         }
@@ -128,11 +115,62 @@
     "definitions": {
         "Product": {
             "required": [
-                "name", "id", "email", "phone"
+                "name", "id", "categoryId"
             ],
             "properties": {
-                "id":{
-                    "type":"integer"
+                "id": {
+                    "type": "integer"
+                },
+                "categoryId": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "Warehouse": {
+                    "$ref": "#/definitions/Warehouse"
+                }
+
+            }
+        },
+        "Products": {
+            "type": "array",
+            "$ref": "#/definitions/Product"
+        },
+        "Warehouse": {
+            "required": [
+                "name", "id", "cityId", "address"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "OnlyProduct": {
+            "required": [
+                "name", "id", "categoryId"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "categoryId": {
                     "type": "integer"
@@ -144,14 +182,76 @@
                 "note": {
                     "type": "string"
                 }
+            }
+        },"AddProductToWarehouse": {
+            "required": [
+                 "warehouseId", "stock", "address"
+            ],
+            "properties": {
+                "warehouseId": {
+                    "type": "integer"
+                },"stock":{"type": "integer"}
+                
 
             }
         },
-        "Products": {
-            "type": "array",
-            "$ref": "#/definitions/Product"
-        }
         
+        "AddProduct":{
+            "required": [
+                "name", "categoryId"
+            ],
+            "properties": {
+               
+                "categoryId": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },"warehouseId": {
+                    "type": "integer"
+                },"stock":{"type": "integer"},"actionType":{"type":"integer"}
+                
+            }
+        },
+        "Category": {
+            "required": [
+                "name", "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "Products": {
+                    "$ref": "#/definitions/Products"
+                }
+
+            }
+
+        },
+        "AddCategory": {
+            "required": ["name"],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+
+        }
+
     },
     "schemes": ["http"],
     "consumes": ["application/json"],

@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": "root",
+    "username": "sangpham",
+    "password": "smd@12345",
     "database": "warehouse",
     "logging":true,
-    "host": "127.0.0.1",
+    "host": "113.184.217.230",
     "dialect": "mysql"
   },
   "test": {
