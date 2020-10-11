@@ -70,7 +70,7 @@ router.post('/', [validateProduct], async (req, res) => {
       message: error.message
     })
   }
-})//oke
+})//chua xong
 
 router.post('/categories', [validateCategory], async (req, res) => {
   try {

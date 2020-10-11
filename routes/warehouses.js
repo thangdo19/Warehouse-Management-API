@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     attributes: { exclude: ['createdAt', 'updatedAt'] }
   })
   return res.json({ statusCode: 200, data: warehouses })
-})
+})//oke swagger // tra them ve city name
 
 router.get('/cities', async (req, res) => {
   const cities = await City.findAll({ 
@@ -20,16 +20,16 @@ router.get('/cities', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: cities })
-})
+})//oke swagger
 
 router.post('/', [validateWarehouse], async (req, res) => {
   const warehouse = await Warehouse.create(req.body)
   return res.json({ statusCode: 200, data: warehouse })
-})
+})//oke swagger
 
 router.post('/cities', [validateCity], async (req, res) => {
   const city = await City.create(req.body)
   return res.json({ statusCode: 200, data: city })
-})
+})//oke swagger
 
 module.exports = router

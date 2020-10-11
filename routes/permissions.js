@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     statusCode: 200,
     data: permissions
   })
-})
+})//oke swagger
 
 router.get('/:id/details', async (req, res) => {
   const permission = await Permission.findOne({ id: req.params.id })
@@ -23,7 +23,7 @@ router.get('/:id/details', async (req, res) => {
       attributes: ['actionCode', 'actionName']
     })
   })
-})
+})//chua xog
 
 router.post('/', [validatePermission], async (req, res) => {
   const transaction = await sequelize.transaction()
@@ -45,7 +45,7 @@ router.post('/', [validatePermission], async (req, res) => {
       message: error.message
     })
   }
-})
+})//oke swagger
 
 // update checkAction for permission detail
 router.patch('/:id/details', [validateActions], async (req, res) => {

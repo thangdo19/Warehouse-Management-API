@@ -36,7 +36,7 @@
                         "in": "body",
                         "description": "User that we want to create",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/AddUser"
                         }
                     }
                 ],
@@ -45,11 +45,14 @@
                     "200": {
                         "description": "New user is created",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/AddUser"
                         }
                     },
                     "400": {
-                        "description": "Cannot create user"
+                        "description": "Cannot create user",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
                     }
                 }
             }
@@ -72,11 +75,14 @@
                     "200": {
                         "description": "User is deleted",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/error400"
                         }
                     },
                     "404": {
-                        "description": "User {:id} cannot be found"
+                        "description": "User {:id} cannot be found",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
                     }
                 }
             },
@@ -89,7 +95,7 @@
                         "in": "body",
                         "description": "User with new values of properties",
                         "schema": {
-                            "$ref": "#/definitions/UpdateUser"
+                            "$ref": "#/definitions/error400"
                         }
                     }
                 ],
@@ -97,11 +103,14 @@
                     "200": {
                         "description": "User is updated",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/error400"
                         }
                     },
                     "404": {
-                        "description": "User {:id} cannot be found"
+                        "description": "User {:id} cannot be found",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
                     }
                 }
             }
@@ -185,6 +194,40 @@
                 "permissionName": {
                     "type": "string"
                 }
+            }
+        },
+        "AddUser": {
+            "required": [
+                "name", "phone", "email", "password"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "error400": {
+            "properties": {
+                "statusCode": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+
             }
         }
     },

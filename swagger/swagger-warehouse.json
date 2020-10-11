@@ -12,46 +12,44 @@
     "host": "localhost:3000",
 
     "paths": {
-        "/products": {
+        "/warehouses": {
             "get": {
-                "tags": ["Products"],
-                "summary": "Get all product in system",
+                "tags": ["Warehouses"],
+                "summary": "Get all warehouses in system",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-
-                            "$ref": "#/definitions/Products"
+                            "$ref": "#/definitions/Warehouses"
                         }
                     }
 
                 }
             },
             "post": {
-                "tags": ["Products"],
-                "summary": "Create new product in system",
-                "description": "Create new user in system",
+                "tags": ["Warehouses"],
+                "summary": "Create new warehouse in system",
+                "description": "Create new warehouse in system",
                 "parameters": [
                     {
-                        "name": "product",
+                        "name": "warehouse",
                         "in": "body",
-                        "description": "product that we want to create",
+                        "description": "Warehouse that we want to create",
                         "schema": {
-                            "$ref": "#/definitions/AddProduct"
+                            "$ref": "#/definitions/AddWarehouse"
                         }
                     }
                 ],
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
-                        "description": "New product is created",
+                        "description": "New user is created",
                         "schema": {
-                            "$ref": "#/definitions/AddProduct"
+                            "$ref": "#/definitions/Warehouse"
                         }
                     },
                     "400": {
-                        "description": "Cannot create product",
-                        "schema": {
+                        "description": "Cannot create warehouse","schema": {
                             "$ref": "#/definitions/error400"
                         }
                     }
@@ -59,57 +57,46 @@
             }
 
         },
-        "/Products/{id}": {
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "description": "ID of user that we want to find",
-                    "type": "integer"
-                }
-            ]
 
-        },
-        "/products/categories": {
+        "/warehouses/cities": {
             "get": {
-                "tags": ["Categories"],
-                "summary": "Get all product by categories permissions in system",
+                "tags": ["Cities"],
+                "summary": "Get all cities in system",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/Categories"
+                            "$ref": "#/definitions/Cities"
                         }
                     }
 
                 }
             },
             "post": {
-                "tags": ["Categories"],
-                "summary": "Create new categories in system",
-                "description": "Create new categories in system",
+                "tags": ["Cities"],
+                "summary": "Create new city in system",
+                "description": "Create new city in system",
                 "parameters": [
                     {
-                        "name": "category",
+                        "name": "city",
                         "in": "body",
-                        "description": "Category that we want to create",
+                        "description": "City that we want to create",
                         "schema": {
-                            "$ref": "#/definitions/AddCategory"
+                            "$ref": "#/definitions/AddCity"
                         }
                     }
                 ],
                 "produces": ["application/json"],
                 "responses": {
-                    "201": {
-                        "description": "New category is created",
+                    "200": {
+                        "description": "New user is created",
                         "schema": {
-                            "$ref": "#/definitions/Category"
+                            "$ref": "#/definitions/City"
                         }
                     },
                     "400": {
-                        "description": "Cannot create category",
-                        "schema": {
+                        "description": "Cannot create city"
+                        ,"schema": {
                             "$ref": "#/definitions/error400"
                         }
                     }
@@ -119,43 +106,13 @@
 
     },
     "definitions": {
-        "Product": {
-            "required": [
-                "name", "id", "categoryId"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "categoryId": {
-                    "type": "integer"
-                },
-
-                "name": {
-                    "type": "string"
-                },
-                "note": {
-                    "type": "string"
-                },
-                "Warehouse": {
-                    "$ref": "#/definitions/Warehouse"
-                }
-
-            }
-        },
-        "Products": {
-            "type": "array",
-            "$ref": "#/definitions/Product"
-        },
         "Warehouse": {
             "required": [
-                "name", "id", "cityId", "address"
+                "name", "id", "address", "cityId"
             ],
             "properties": {
+                
                 "id": {
-                    "type": "integer"
-                },
-                "cityId": {
                     "type": "integer"
                 },
                 "name": {
@@ -164,45 +121,25 @@
                 "address": {
                     "type": "string"
                 },
+                "cityId": {
+                    "type": "integer"
+                },
                 "description": {
                     "type": "string"
                 }
 
             }
         },
-        "AddProduct": {
-            "required": [
-                "name", "categoryId"
-            ],
-            "properties": {
-
-                "categoryId": {
-                    "type": "integer"
-                },
-
-                "name": {
-                    "type": "string"
-                },
-                "note": {
-                    "type": "string"
-                },
-                "warehouseId": {
-                    "type": "integer"
-                },
-                "stock": {
-                    "type": "integer"
-                },
-                "actionType": {
-                    "type": "integer"
-                }
-
-            }
+        "Warehouses": {
+            "type": "array",
+            "$ref": "#/definitions/Warehouse"
         },
-        "Category": {
+        "City": {
             "required": [
                 "name", "id"
             ],
             "properties": {
+                
                 "id": {
                     "type": "integer"
                 },
@@ -211,37 +148,50 @@
                 },
                 "description": {
                     "type": "string"
-                },
-                "Products": {
-                    "$ref": "#/definitions/Products"
                 }
 
             }
-
         },
-        "Categories": {
+        "AddWarehouse": {
+            "required": [
+                "name", "cityId", "address"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "Cities": {
             "type": "array",
-            "$ref": "#/definitions/Category"
-        }
-        ,
-        "AddCategory": {
+            "$ref": "#/definitions/City"
+        },
+        "AddCity": {
             "required": ["name"],
             "properties": {
+                
                 "name": {
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
                 }
-
             }
-
-        },"error400":{
+        },"error400": {
             "properties": {
-                "statusCode":{
+                "statusCode": {
                     "type": "string"
                 },
-                "message":{
+                "message": {
                     "type": "string"
                 }
 
