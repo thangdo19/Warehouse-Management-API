@@ -52,7 +52,7 @@ router.get('/permissions', async (req, res) => {
   })
 })
 
-router.post('/', [auth, validateUser], async (req, res) => {
+router.post('/', [validateUser], async (req, res) => {
   // hash password
   req.body.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt())
 
