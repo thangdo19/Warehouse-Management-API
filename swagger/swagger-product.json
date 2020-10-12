@@ -1,0 +1,256 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+
+    "paths": {
+        "/products": {
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get all product in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+
+                            "$ref": "#/definitions/Products"
+                        }
+                    }
+
+                }
+            },
+            "post": {
+                "tags": ["Products"],
+                "summary": "Create new product in system",
+                "description": "Create new user in system",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "body",
+                        "description": "product that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddProduct"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New product is created",
+                        "schema": {
+                            "$ref": "#/definitions/AddProduct"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create product",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
+            }
+
+        },
+        "/Products/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of user that we want to find",
+                    "type": "integer"
+                }
+            ]
+
+        },
+        "/products/categories": {
+            "get": {
+                "tags": ["Categories"],
+                "summary": "Get all product by categories permissions in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Categories"
+                        }
+                    }
+
+                }
+            },
+            "post": {
+                "tags": ["Categories"],
+                "summary": "Create new categories in system",
+                "description": "Create new categories in system",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "body",
+                        "description": "Category that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddCategory"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "201": {
+                        "description": "New category is created",
+                        "schema": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create category",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+    "definitions": {
+        "Product": {
+            "required": [
+                "name", "id", "categoryId"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "categoryId": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "Warehouse": {
+                    "$ref": "#/definitions/Warehouse"
+                }
+
+            }
+        },
+        "Products": {
+            "type": "array",
+            "$ref": "#/definitions/Product"
+        },
+        "Warehouse": {
+            "required": [
+                "name", "id", "cityId", "address"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "AddProduct": {
+            "required": [
+                "name", "categoryId"
+            ],
+            "properties": {
+
+                "categoryId": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "warehouseId": {
+                    "type": "integer"
+                },
+                "stock": {
+                    "type": "integer"
+                },
+                "actionType": {
+                    "type": "integer"
+                }
+
+            }
+        },
+        "Category": {
+            "required": [
+                "name", "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "Products": {
+                    "$ref": "#/definitions/Products"
+                }
+
+            }
+
+        },
+        "Categories": {
+            "type": "array",
+            "$ref": "#/definitions/Category"
+        }
+        ,
+        "AddCategory": {
+            "required": ["name"],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+
+        },"error400":{
+            "properties": {
+                "statusCode":{
+                    "type": "string"
+                },
+                "message":{
+                    "type": "string"
+                }
+
+            }
+        }
+
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+
+}

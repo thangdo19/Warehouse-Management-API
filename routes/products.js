@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: products })
-})
+})//oke swagger
 
 router.get('/categories', async (req, res) => {
   const categories = await Category.findAll({
@@ -32,7 +32,7 @@ router.get('/categories', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: categories })
-})
+})//oke swagger
 
 router.get('/test', [auth], async (req, res) => {
   return res.json({ data: req.user })
@@ -78,7 +78,7 @@ router.post('/', [auth, validateProduct], async (req, res) => {
       message: error.message
     })
   }
-})
+})//chua xong
 
 router.post('/categories', [auth, validateCategory], async (req, res) => {
   try {
@@ -87,7 +87,7 @@ router.post('/categories', [auth, validateCategory], async (req, res) => {
   } catch (error) {
     return res.json({ statusCode: 400, message: error.message })
   }
-})
+})//oke swagger
 
 async function createWarehouseHistory(actionType, warehouseId, note) {
   const type = await HistoryType.findOne({ where: { name: actionType } })

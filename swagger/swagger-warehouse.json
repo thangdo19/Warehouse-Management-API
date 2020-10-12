@@ -1,0 +1,206 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+
+    "paths": {
+        "/warehouses": {
+            "get": {
+                "tags": ["Warehouses"],
+                "summary": "Get all warehouses in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Warehouses"
+                        }
+                    }
+
+                }
+            },
+            "post": {
+                "tags": ["Warehouses"],
+                "summary": "Create new warehouse in system",
+                "description": "Create new warehouse in system",
+                "parameters": [
+                    {
+                        "name": "warehouse",
+                        "in": "body",
+                        "description": "Warehouse that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddWarehouse"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/Warehouse"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create warehouse","schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
+            }
+
+        },
+
+        "/warehouses/cities": {
+            "get": {
+                "tags": ["Cities"],
+                "summary": "Get all cities in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Cities"
+                        }
+                    }
+
+                }
+            },
+            "post": {
+                "tags": ["Cities"],
+                "summary": "Create new city in system",
+                "description": "Create new city in system",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "body",
+                        "description": "City that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddCity"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/City"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create city"
+                        ,"schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+    "definitions": {
+        "Warehouse": {
+            "required": [
+                "name", "id", "address", "cityId"
+            ],
+            "properties": {
+                
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "Warehouses": {
+            "type": "array",
+            "$ref": "#/definitions/Warehouse"
+        },
+        "City": {
+            "required": [
+                "name", "id"
+            ],
+            "properties": {
+                
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "AddWarehouse": {
+            "required": [
+                "name", "cityId", "address"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "Cities": {
+            "type": "array",
+            "$ref": "#/definitions/City"
+        },
+        "AddCity": {
+            "required": ["name"],
+            "properties": {
+                
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },"error400": {
+            "properties": {
+                "statusCode": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+
+            }
+        }
+
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+
+}

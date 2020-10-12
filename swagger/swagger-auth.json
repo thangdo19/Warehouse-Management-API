@@ -1,0 +1,88 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+
+    "paths": {
+        "/auth": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Auth email and password",
+                "description": "Auth email and password",
+                "parameters": [
+                    {
+                        "name": "auth",
+                        "in": "body",
+                        "description": "Input email and password",
+                        "schema": {
+                            "$ref": "#/definitions/Auth"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Auth success",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "401": {
+                        "description": "Auth email and password fail",
+                        "schema": {
+                            "$ref": "#/definitions/error401"
+                        }
+                    }
+                }
+            }
+
+        }
+       
+    },
+    "definitions": {
+        "Auth": {
+            "required": [
+                "email", "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+
+            }
+        },"Token":{
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+
+            }
+        },"error401":{
+            "properties": {
+                "statusCode":{
+                    "type": "string"
+                },
+                "message":{
+                    "type": "string"
+                }
+
+            }
+        }
+        
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+
+}

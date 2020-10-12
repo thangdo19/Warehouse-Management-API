@@ -7,11 +7,28 @@ const history = require('../routes/history')
 const warehouses = require('../routes/warehouses')
 const products = require('../routes/products')
 const error = require('../middlewares/error-handler-middleware')
+
+const swaggerUi = require('swagger-ui-express'),
+swaggerDocumentUser = require('../swagger/swagger-user.json');
+swaggerDocumentProduct = require('../swagger/swagger-product.json');
+swaggerDocumentWarehouse = require('../swagger/swagger-warehouse.json');
+swaggerDocumentPermission= require('../swagger/swagger-permission.json');
+swaggerDocumentAuth= require('../swagger/swagger-auth.json');
+
+
+
 /**
  * @Usage Add middlewares and route handlers
  * @param {*} app Application reference
  */
 module.exports = function(app) {
+  
+  app.use('/api-docs-user', swaggerUi.serve, swaggerUi.setup(swaggerDocumentUser));//swagger for user
+  app.use('/api-docs-product', swaggerUi.serve, swaggerUi.setup(swaggerDocumentProduct));//swagger for product
+  app.use('/api-docs-warehouse', swaggerUi.serve, swaggerUi.setup(swaggerDocumentWarehouse));//swagger for warehouse
+  app.use('/api-docs-auth', swaggerUi.serve, swaggerUi.setup(swaggerDocumentAuth));//swagger for auth
+  app.use('/api-docs-permission', swaggerUi.serve, swaggerUi.setup(swaggerDocumentPermission));//swagger for permisson
+
   app.use(express.json())
   app.use(morgan('dev'))
   // auth

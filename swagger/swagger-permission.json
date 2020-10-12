@@ -1,0 +1,143 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:3000",
+
+    "paths": {
+        "/permissions": {
+            "get": {
+                "tags": ["Permisson"],
+                "summary": "Get all permission in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Permission"
+                        }
+                    }
+
+                }
+            },
+            "post": {
+                "tags": ["Permission"],
+                "summary": "Create new permission in system",
+                "description": "Create new permission in system",
+                "parameters": [
+                    {
+                        "name": "permission",
+                        "in": "body",
+                        "description": "Permission that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/AddPermission"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New permisson is created",
+                        "schema": {
+                            "$ref": "#/definitions/AddPermission"
+                        }
+                    },
+                    "400": {
+                        "description": "Cannot create permission",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
+            }
+
+        },
+        "/permissions/{id}/details": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of permission that we want to find",
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "tags": ["Permisson"],
+                "summary": "Get permission details in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PermissonDetail"
+                        }
+                    }
+
+                }
+            }
+        }
+
+    },
+    "definitions": {
+        "Permission": {
+            "required": [
+                "id", "permissionName"
+            ],
+            "properties": {
+
+                "name": {
+                    "type": "string"
+                },
+
+                "permissionName": {
+                    "type": "string"
+                }
+            }
+
+        },
+        "Permissions": {
+            "type": "array",
+            "$ref": "#/definitions/Permission"
+        },
+        "AddPermission": {
+            "required": ["permissionName"],
+            "properties": {
+                "permissionName": {
+                    "type": "string"
+                }
+            }
+        },"PermissonDetail": {
+            "required": ["actionCode","actionName"],
+            "properties": {
+                "actionCode": {
+                    "type": "string"
+                },"actionName": {
+                    "type": "string"
+                }
+            }
+        }
+        ,
+
+        "error400": {
+            "properties": {
+                "statusCode": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+
+            }
+        }
+    },
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+
+}

@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     statusCode: 200,
     data: users
   })
-})
+})//oke swagger
 
 router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (req, res) => {
   return res.json({ yia: 'pass'})
@@ -69,7 +69,7 @@ router.post('/', [auth, validateUser], async (req, res) => {
       message: error.message
     })
   }
-})
+})//oke swagger
 
 router.post('/permissions', [auth, validateUserPermission], async (req, res) => {
   const user = await User.findOne({ where: { id: req.body.userId } })
@@ -110,7 +110,7 @@ router.delete('/:id', [auth], async (req, res) => {
   else return res.json({
     statusCode: 200
   })
-})
+})//oke swagger
 
 router.patch('/:id', [auth, validateUser], async (req, res) => {
   const affected = (await User.update(req.body, { 
@@ -124,6 +124,6 @@ router.patch('/:id', [auth, validateUser], async (req, res) => {
   else return res.json({
     statusCode: 200
   })
-})
+})//oke swagger
 
 module.exports = router
