@@ -9,8 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "https://cnpmwarehouse.herokuapp.com",
-
+    "host": "cnpmwarehouse.herokuapp.com",
     "paths": {
         "/auth": {
             "post": {
@@ -45,7 +44,7 @@
             }
 
         }
-       
+
     },
     "definitions": {
         "Auth": {
@@ -61,27 +60,29 @@
                 }
 
             }
-        },"Token":{
+        },
+        "Token": {
             "properties": {
                 "token": {
                     "type": "string"
                 }
 
             }
-        },"error401":{
+        },
+        "error401": {
             "properties": {
-                "statusCode":{
+                "statusCode": {
                     "type": "string"
                 },
-                "message":{
+                "message": {
                     "type": "string"
                 }
 
             }
         }
-        
+
     },
-    "schemes": ["http"],
+    "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"]
 

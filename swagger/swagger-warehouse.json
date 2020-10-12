@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "https://cnpmwarehouse.herokuapp.com",
+    "host": "cnpmwarehouse.herokuapp.com",
     "paths": {
         "/warehouses": {
             "get": {
@@ -48,7 +48,8 @@
                         }
                     },
                     "400": {
-                        "description": "Cannot create warehouse","schema": {
+                        "description": "Cannot create warehouse",
+                        "schema": {
                             "$ref": "#/definitions/error400"
                         }
                     }
@@ -94,8 +95,8 @@
                         }
                     },
                     "400": {
-                        "description": "Cannot create city"
-                        ,"schema": {
+                        "description": "Cannot create city",
+                        "schema": {
                             "$ref": "#/definitions/error400"
                         }
                     }
@@ -110,7 +111,7 @@
                 "name", "id", "address", "cityId"
             ],
             "properties": {
-                
+
                 "id": {
                     "type": "integer"
                 },
@@ -138,7 +139,7 @@
                 "name", "id"
             ],
             "properties": {
-                
+
                 "id": {
                     "type": "integer"
                 },
@@ -177,7 +178,7 @@
         "AddCity": {
             "required": ["name"],
             "properties": {
-                
+
                 "name": {
                     "type": "string"
                 },
@@ -185,7 +186,8 @@
                     "type": "string"
                 }
             }
-        },"error400": {
+        },
+        "error400": {
             "properties": {
                 "statusCode": {
                     "type": "string"
@@ -198,7 +200,7 @@
         }
 
     },
-    "schemes": ["http"],
+    "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"]
 
