@@ -1,3 +1,4 @@
+const Joi = require('joi')
 const sequelize = require('../db/connection')
 const { DataTypes } = require('sequelize')
 
@@ -9,7 +10,8 @@ const City = sequelize.define('City', {
   },
   name: {
     type: DataTypes.STRING(255),
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   description: {
     type: DataTypes.STRING(255),
@@ -18,6 +20,25 @@ const City = sequelize.define('City', {
   tableName: 'cities'
 })
 
+/**
+ * @Usage Validate city as a middleware
+ */
+function validateCity(req, res, next) {
+  const schema = Joi.object({
+    name: Joi.string().max(255),
+    description: Joi.string().max(255).optional()
+  })
+  // seek for error
+  const { error } = schema.validate(req.body, {
+    presence: (req.method !== 'PATCH') ? 'required' : 'optional',
+    abortEarly: false
+  })
+  // response when having error
+  if (error) return res.json({ statusCode: 400, message: error.message })
+  else next() // no errors
+}
+
 module.exports = {
-  City
+  City,
+  validateCity
 }
