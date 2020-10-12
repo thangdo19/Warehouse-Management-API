@@ -15,6 +15,16 @@
             "get": {
                 "tags": ["Products"],
                 "summary": "Get all product in system",
+                "parameters":{
+                    "in":"header",
+                    "name":"Authorization",
+                    "required":true,
+                    "schema":{
+                        "type": "string",
+                        "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                    }
+                }
+                ,
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -250,6 +260,15 @@
     },
     "schemes": ["https"],
     "consumes": ["application/json"],
-    "produces": ["application/json"]
+    "produces": ["application/json"],
+    "components": {        
+        "securitySchemes": {
+          "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        }
+      }
 
 }
