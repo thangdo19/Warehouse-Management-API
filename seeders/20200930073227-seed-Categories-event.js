@@ -3,8 +3,8 @@ const faker = require('faker')
 
 const categories = [...Array(5)].map((category) => ({
     name: faker
-        .lorem
-        .word(),
+        .company
+        .companyName(),
     description: faker
         .vehicle
         .type(),

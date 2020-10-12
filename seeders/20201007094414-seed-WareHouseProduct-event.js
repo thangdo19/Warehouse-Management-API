@@ -1,9 +1,9 @@
 'use strict';
 
 const faker = require('faker')
-const warehouse_products = [...Array(100)].map((warehouse_product)=>({
-  productId:Math.floor(Math.random() * 200 + 1),
-  warehouseId:Math.floor(Math.random() * 200 + 1),
+const warehouse_products = [...Array(90)].map((warehouse_product)=>({
+  productId:Math.floor(Math.random() * 150 + 1),
+  warehouseId:Math.floor(Math.random() * 150 + 1),
   stock:Math.floor(Math.random() * 200 ),
   createdAt:new Date(),
   updatedAt:new Date()

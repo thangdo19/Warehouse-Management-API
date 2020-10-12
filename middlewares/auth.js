@@ -10,7 +10,7 @@ async function auth(req, res, next) {
     const token = req.header('Authorization').substring(7, req.header('Authorization').length)
     
     try {
-      const payload = jwt.verify(token, process.env.JWT_KEY)
+      const payload = jwt.verify(token, process.env.JWT_KEY||12345)
       req.user = payload
       next()
     } 
