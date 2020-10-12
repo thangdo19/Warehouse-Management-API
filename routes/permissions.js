@@ -14,7 +14,8 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id/details', async (req, res) => {
-  const permission = await Permission.findOne({ id: req.params.id })
+  const permission = await Permission.findOne({ where: { id: req.params.id } })
+  console.log(req.params.id)
   if (!permission) return res.json({ statusCode: 404, message: 'Permission not found' })
 
   return res.json({
