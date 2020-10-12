@@ -30,6 +30,7 @@ router.post('/', [validatePermission], async (req, res) => {
   
   try {
     const permission = await Permission.create(req.body, { transaction: transaction })
+    // Add permission details (includes all permission that available in the system)
     await addDetails(permission.id, transaction)
 
     await transaction.commit()

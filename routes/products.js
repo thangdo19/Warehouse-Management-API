@@ -8,6 +8,8 @@ const { Warehouse } = require('../models/Warehouse')
 const { WarehouseProduct } = require('../models/WarehouseProduct')
 const { HistoryType } = require('../models/HistoryType')
 const { History } = require('../models/History')
+const { auth } = require('../middlewares/auth')
+// const { checkAction } = require('../middlewares/check-action')
 
 router.get('/', async (req, res) => {
   const products = await Product.findAll({
@@ -32,12 +34,16 @@ router.get('/categories', async (req, res) => {
   return res.json({ statusCode: 200, data: categories })
 })
 
+router.get('/test', [auth], async (req, res) => {
+  return res.json({ data: req.user })
+})
+
 /**
  * @Usage This route is used for 2 purposes: 
  *        Create new product then import it into the specified warehouse. 
  *        Handle import/export product of users.
  */
-router.post('/', [validateProduct], async (req, res) => {
+router.post('/', [auth], [validateProduct], async (req, res) => {
   const { warehouseId, actionType } = req.body
   const warehouse = await Warehouse.findOne({ where: { id: warehouseId } })
   if (!warehouse) return res.json({ statusCode: 400, message: 'Invalid warehouse' })
@@ -51,14 +57,16 @@ router.post('/', [validateProduct], async (req, res) => {
       if (actionType === 'EXPORT') return res.json({ statusCode: 400, message: 'Product not found. Cannot export'})
       const warehProd = await createNewProductAndAddRelationship(req, transaction, warehouse)
       // create history, commit & response
-      await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
+      const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
+      await createUserHistory(req, transaction, history, req.user.id)
       await transaction.commit()
       return res.json({ statusCode: 201, data: warehProd })
     }
     // handle stock when import/export from warehouse
     const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
     // done, create history, commit transaction & response
-    await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
+    const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
+    await createUserHistory(req, transaction, history, req.user.id)
     await transaction.commit()
     return res.json({ statusCode: 200, data: warehProd })
   } 
@@ -83,7 +91,7 @@ router.post('/categories', [validateCategory], async (req, res) => {
 
 async function createWarehouseHistory(actionType, warehouseId, note) {
   const type = await HistoryType.findOne({ where: { name: actionType } })
-  await History.create({
+  return await History.create({
     typeId: type.id,
     warehouseId,
     note
@@ -113,6 +121,16 @@ async function createNewProductAndAddRelationship(req, transaction, warehouse) {
   }
 }
 
+/**
+ * @Usage Find middle record between Warehouse & Product, if not 
+ * (product is in another warehouse but not this warehouse) => create one. 
+ * When it found. Update the stock when import/export from warehouse
+ * @param {*} req 
+ * @param {*} transaction 
+ * @param {*} warehouse 
+ * @param {*} product 
+ * @param {*} actionType 
+ */
 async function updateStock(req, transaction, warehouse, product, actionType) {
   try {
     // find relationship between warehouse & product
@@ -144,6 +162,15 @@ async function updateStock(req, transaction, warehouse, product, actionType) {
     return warehProd
   } 
   catch (error) {
+    throw error
+  }
+}
+
+async function createUserHistory(req, transaction, history, userId) {
+  try {
+    const userHistory = await history.addUser(userId, { transaction: transaction })
+    console.log(userHistory)
+  } catch (error) {
     throw error
   }
 }
