@@ -7,6 +7,7 @@ const history = require('../routes/history')
 const warehouses = require('../routes/warehouses')
 const products = require('../routes/products')
 const error = require('../middlewares/error-handler-middleware')
+var path = require('path')
 
 const swaggerUi = require('swagger-ui-express'),
 swaggerDocumentUser = require('../swagger/swagger-user.json');
@@ -22,7 +23,9 @@ swaggerDocumentAuth= require('../swagger/swagger-auth.json');
  * @param {*} app Application reference
  */
 module.exports = function(app) {
-  
+  app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/index.html'));
+})
   app.use('/api-docs-user', swaggerUi.serve, swaggerUi.setup(swaggerDocumentUser));//swagger for user
   app.use('/api-docs-product', swaggerUi.serve, swaggerUi.setup(swaggerDocumentProduct));//swagger for product
   app.use('/api-docs-warehouse', swaggerUi.serve, swaggerUi.setup(swaggerDocumentWarehouse));//swagger for warehouse
