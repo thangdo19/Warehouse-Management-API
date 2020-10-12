@@ -16,7 +16,7 @@
                 "tags": ["Products"],
                 "summary": "Get all product in system",
                 "parameters":{
-                    "in":"header",
+                    "-in":"header",
                     "name":"Authorization",
                     "required":true,
                     "schema":{
