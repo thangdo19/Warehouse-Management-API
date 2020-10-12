@@ -5,7 +5,7 @@ const app = express()
 require('./startup/handle-uncaught-errors')()
 require('./startup/routes')(app)
 require('./startup/model-association')()
-require('./db/db-sync')()
+//require('./db/db-sync')()
 
 
 
