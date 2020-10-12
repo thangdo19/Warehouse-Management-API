@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "https://cnpmwarehouse.herokuapp.com",
+    "host": "cnpmwarehouse.herokuapp.com",
     "paths": {
         "/users": {
             "get": {
