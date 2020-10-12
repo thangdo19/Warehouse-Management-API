@@ -43,7 +43,7 @@ router.get('/test', [auth], async (req, res) => {
  *        Create new product then import it into the specified warehouse. 
  *        Handle import/export product of users.
  */
-router.post('/', [auth], [validateProduct], async (req, res) => {
+router.post('/', [auth, validateProduct], async (req, res) => {
   const { warehouseId, actionType } = req.body
   const warehouse = await Warehouse.findOne({ where: { id: warehouseId } })
   if (!warehouse) return res.json({ statusCode: 400, message: 'Invalid warehouse' })
@@ -80,7 +80,7 @@ router.post('/', [auth], [validateProduct], async (req, res) => {
   }
 })
 
-router.post('/categories', [validateCategory], async (req, res) => {
+router.post('/categories', [auth, validateCategory], async (req, res) => {
   try {
     const category = await Category.create(req.body)
     return res.json({ statusCode: 201, data: category })

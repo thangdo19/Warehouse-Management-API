@@ -52,7 +52,7 @@ router.get('/permissions', async (req, res) => {
   })
 })
 
-router.post('/', [validateUser], async (req, res) => {
+router.post('/', [auth, validateUser], async (req, res) => {
   // hash password
   req.body.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt())
 
@@ -71,7 +71,7 @@ router.post('/', [validateUser], async (req, res) => {
   }
 })
 
-router.post('/permissions', [validateUserPermission], async (req, res) => {
+router.post('/permissions', [auth, validateUserPermission], async (req, res) => {
   const user = await User.findOne({ where: { id: req.body.userId } })
   if (!user) return res.json({ statusCode: 404, message: `User with id "${req.body.userId}" not found`})
 
@@ -100,7 +100,7 @@ router.post('/permissions', [validateUserPermission], async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth], async (req, res) => {
   const deleted = await User.destroy({ where: { id: req.params.id } })
 
   if (deleted === 0) return res.json({ 
@@ -112,7 +112,7 @@ router.delete('/:id', async (req, res) => {
   })
 })
 
-router.patch('/:id', [validateUser], async (req, res) => {
+router.patch('/:id', [auth, validateUser], async (req, res) => {
   const affected = (await User.update(req.body, { 
     where: { id: req.params.id }
   }))[0] // take the first element which is number of affected rows
