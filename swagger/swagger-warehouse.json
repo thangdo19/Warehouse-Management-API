@@ -37,6 +37,14 @@
                         "schema": {
                             "$ref": "#/definitions/AddWarehouse"
                         }
+                    }, {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                        }
                     }
                 ],
                 "produces": ["application/json"],
@@ -83,6 +91,14 @@
                         "description": "City that we want to create",
                         "schema": {
                             "$ref": "#/definitions/AddCity"
+                        }
+                    }, {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
                         }
                     }
                 ],

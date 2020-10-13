@@ -15,16 +15,17 @@
             "get": {
                 "tags": ["Products"],
                 "summary": "Get all product in system",
-                "parameters":[{
-                    "in":"header",
-                    "name":"Authorization",
-                    "required":true,
-                    "schema":{
-                        "type": "string",
-                        "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                        }
                     }
-                }]
-                ,
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -47,6 +48,14 @@
                         "description": "product that we want to create",
                         "schema": {
                             "$ref": "#/definitions/AddProduct"
+                        }
+                    }, {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
                         }
                     }
                 ],
@@ -105,6 +114,14 @@
                         "description": "Category that we want to create",
                         "schema": {
                             "$ref": "#/definitions/AddCategory"
+                        }
+                    }, {
+                        "in": "header",
+                        "name": "Authorization",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
                         }
                     }
                 ],
@@ -261,14 +278,14 @@
     "schemes": ["https"],
     "consumes": ["application/json"],
     "produces": ["application/json"],
-    "components": {        
+    "components": {
         "securitySchemes": {
-          "bearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-          }
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
-      }
+    }
 
 }
