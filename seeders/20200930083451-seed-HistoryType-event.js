@@ -1,14 +1,14 @@
 'use strict';
 let history_types =[];
 history_types[0] = {
-  name:"Nhap hang hoa",
-description:"Nhap hang vao trong kho",
+  name:"IMPORT",
+description:"Importing products to warehouse",
 createdAt:new Date,
 updatedAt:new Date
 }
 history_types[1] = {
-  name:"Xua hang hoa",
-description:"Xuat hang tu kho",
+  name:"EXPORT",
+description:"Xuat products from warehouse",
 createdAt:new Date,
 updatedAt:new Date
 }
