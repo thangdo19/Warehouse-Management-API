@@ -53,7 +53,8 @@
             ],
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"string@gmail.com"
                 },
                 "password": {
                     "type": "string"
