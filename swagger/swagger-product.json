@@ -219,7 +219,8 @@
                     "type": "integer"
                 },
                 "actionType": {
-                    "type": "integer"
+                    "type": "string",
+                    "example": "IMPORT||EXPORT"
                 }
 
             }

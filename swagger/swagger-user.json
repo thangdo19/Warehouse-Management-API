@@ -210,10 +210,12 @@
                     "type": "string"
                 },
                 "phone": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"0123456789"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"string@gmail.com"
                 },
                 "password": {
                     "type": "string"

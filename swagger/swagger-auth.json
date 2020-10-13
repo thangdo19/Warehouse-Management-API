@@ -64,7 +64,8 @@
         "Token": {
             "properties": {
                 "token": {
-                    "type": "string"
+                    "type": "string",
+                    "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAxLCJpYXQiOjE2MDI1Njc0MTB9.YlGJVchEMxUkL0wQaEeneFFareZbDf9mkgZsc9Win38"
                 }
 
             }
