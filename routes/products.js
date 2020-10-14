@@ -16,7 +16,9 @@ router.get('/', async (req, res) => {
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
       model: Warehouse,
-      as: 'warehouses'
+      as: 'warehouses',
+      attributes: ['id', 'cityId', 'name'],
+      through: { attributes: [] }
     }
   })
   return res.json({ statusCode: 200, data: products })
@@ -33,6 +35,28 @@ router.get('/categories', async (req, res) => {
   })
   return res.json({ statusCode: 200, data: categories })
 })//oke swagger
+
+router.get('/categories/:id', async (req, res) => {
+  const category = await Category.findOne({
+    where: { id: req.params.id },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: {
+      model: Product,
+      as: 'products',
+      attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
+    }
+  })
+  return res.json({ statusCode: 200, data: category })
+})
+// get products by their warehouse
+router.get('/warehouse/:id', async (req, res) => {
+  const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
+  if (!warehouse) return res.json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
+  const products = await warehouse.getProducts({
+    attributes: { exclude: ['createdAt', 'updatedAt'] }
+  })
+  return res.json({ statusCode: 200, data: products })
+})
 
 router.get('/test', [auth], async (req, res) => {
   return res.json({ data: req.user })
