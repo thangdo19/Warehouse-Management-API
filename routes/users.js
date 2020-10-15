@@ -33,7 +33,7 @@ router.get('/:id', [auth], async (req, res) => {
     statusCode: 200,
     data: user
   })
-})
+})//oke swagger
 
 // Get all users with their permissions
 router.get('/permissions', async (req, res) => {

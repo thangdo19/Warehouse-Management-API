@@ -141,6 +141,54 @@
                     }
                 }
             }
+        },"/Products/categories/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of category that we want to find product",
+                    "type": "integer"
+                }
+            ],"get":{
+                "tags": ["Products"],
+                "summary": "Get all product by cateroryID in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+
+                            "$ref": "#/definitions/Products"
+                        }
+                    }
+
+                }
+            }
+
+        },"/Products/warehouse/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of warehouse that we want to find product",
+                    "type": "integer"
+                }
+            ],"get":{
+                "tags": ["Products"],
+                "summary": "Get all product by warehouseID in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+
+                            "$ref": "#/definitions/ProductByID"
+                        }
+                    }
+
+                }
+            }
+
         }
 
     },
@@ -163,7 +211,7 @@
                 "note": {
                     "type": "string"
                 },
-                "Warehouse": {
+                "warehouse": {
                     "$ref": "#/definitions/Warehouse"
                 }
 
@@ -172,6 +220,48 @@
         "Products": {
             "type": "array",
             "$ref": "#/definitions/Product"
+        },"ProductByWarehouse": {
+            "required": [
+                "name", "id", "categoryId"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "categoryId": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "WarehouseProduct": {
+                    "$ref": "#/definitions/WarehouseProduct"
+                }
+
+            }
+        },
+        "WarehouseProduct":{
+            "required": [
+                 "id", "warehouseId", "productId","stock"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "warehouseId": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "integer"
+                },
+                "stock": {
+                    "type": "integer"
+                }
+            }
         },
         "Warehouse": {
             "required": [
@@ -239,7 +329,7 @@
                 "description": {
                     "type": "string"
                 },
-                "Products": {
+                "products": {
                     "$ref": "#/definitions/Products"
                 }
 
@@ -262,6 +352,43 @@
 
             }
 
+        },"ProductByCategory": {
+            "required": [
+                "name", "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "products": {
+                    "$ref": "#/definitions/ProductWarehouse"
+                }
+
+            }
+
+        },"ProductWarehouse": {
+            "required": [
+                "name", "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+
+                "name": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                }
+
+            }
         },
         "error400": {
             "properties": {

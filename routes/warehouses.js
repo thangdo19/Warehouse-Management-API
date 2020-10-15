@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
   if (!warehouse) return res.json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
 
   return res.json({ statusCode: 200, data: warehouse })
-})
+})//oke swagger
 
 router.get('/cities', async (req, res) => {
   const cities = await City.findAll({ 
@@ -41,7 +41,7 @@ router.get('/cities/:id', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: city })
-})
+})//oke swagger
 
 router.post('/', [auth, validateWarehouse], async (req, res) => {
   const warehouse = await Warehouse.create(req.body)

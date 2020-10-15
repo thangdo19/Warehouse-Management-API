@@ -47,7 +47,7 @@ router.get('/categories/:id', async (req, res) => {
     }
   })
   return res.json({ statusCode: 200, data: category })
-})
+})//oke swagger
 // get products by their warehouse
 router.get('/warehouse/:id', async (req, res) => {
   const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})

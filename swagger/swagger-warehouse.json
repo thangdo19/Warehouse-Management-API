@@ -65,7 +65,54 @@
             }
 
         },
+        "/warehouses/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of warehouse that we want",
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "tags": ["Warehouses"],
+                "summary": "Get warehouse by ID in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Warehouse"
+                        }
+                    }
 
+                }
+            }
+        },
+        "/warehouses/cities/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of warehouse that we want",
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "tags": ["Cities"],
+                "summary": "Get city by ID in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/City"
+                        }
+                    }
+
+                }
+            }
+        },
         "/warehouses/cities": {
             "get": {
                 "tags": ["Cities"],
