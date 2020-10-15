@@ -92,7 +92,7 @@
                 }
             },
             "patch": {
-                "summary": "Update user with give ID",
+                "summary": "Update user with give ID, before call update, call api get user by id to display all",
                 "tags": ["Users"],
                 "parameters": [
                     {
@@ -100,7 +100,7 @@
                         "in": "body",
                         "description": "User with new values of properties",
                         "schema": {
-                            "$ref": "#/definitions/error400"
+                            "$ref": "#/definitions/UpdateUser"
                         }
                     }
                 ],
@@ -108,7 +108,7 @@
                     "200": {
                         "description": "User is updated",
                         "schema": {
-                            "$ref": "#/definitions/error400"
+                            "$ref": "#/definitions/UpdateUser"
                         }
                     },
                     "404": {
@@ -144,7 +144,9 @@
                 "name", "id", "email", "phone"
             ],
             "properties": {
-
+                "id":{
+                    "type":"string"
+                },
                 "name": {
                     "type": "string"
                 },
