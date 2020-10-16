@@ -1,7 +1,7 @@
 'use strict';
 const faker = require('faker')
 // const bcrypt = require('bcrypt')
-const users = [...Array(200)].map((user)=>({
+const users = [...Array(50)].map((user)=>({
   name: faker.name.findName(),  
   phone: faker.phone.phoneNumber('0##########'),
   email: faker.internet.email(),

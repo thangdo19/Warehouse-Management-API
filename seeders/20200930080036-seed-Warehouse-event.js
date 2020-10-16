@@ -1,8 +1,8 @@
 'use strict';
 const faker = require('faker')
 
-const warehouses = [...Array(200)].map((warehouse)=>({
-  cityId:parseInt(Math.floor(Math.random() *49) + 1),
+const warehouses = [...Array(10)].map((warehouse)=>({
+  cityId:parseInt(Math.floor(Math.random() *10) + 1),
   name:faker.address.city(),
   address:faker.address.streetAddress(),
   description:faker.lorem.sentence(),

@@ -1,7 +1,7 @@
 'use strict';
 const faker = require('faker')
 
-const cities = [...Array(50)].map((city)=>({
+const cities = [...Array(10)].map((city)=>({
   name:faker.address.city(),
   description:faker.lorem.sentence(),
   createdAt:new Date(),

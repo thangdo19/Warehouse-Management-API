@@ -12,3 +12,4 @@ require('./startup/model-association')()
 app.listen(port = (process.env.PORT || 3000), () => {
   console.log(`Listening on port ${port}`)
 })
+

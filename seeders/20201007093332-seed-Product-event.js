@@ -1,7 +1,7 @@
 'use strict';
 const faker = require('faker')
 // const bcrypt = require('bcrypt')
-const products = [...Array(200)].map((product)=>({
+const products = [...Array(50)].map((product)=>({
   categoryId:parseInt(Math.floor(Math.random() *5) + 1),
   name:faker.commerce.productName(),
   note:faker.lorem.sentence(),
