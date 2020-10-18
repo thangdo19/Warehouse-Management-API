@@ -24,6 +24,21 @@ router.get('/', async (req, res) => {
   return res.status(200).json({ statusCode: 200, data: products })
 })//oke swagger
 
+router.get('/:id', async (req, res) => {
+  const product = await Product.findOne({
+    where: { id: req.params.id },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: {
+      model: Warehouse,
+      as: 'warehouses',
+      attributes: ['id', 'cityId', 'name'],
+      through: { attributes: [] }
+    }
+  })
+  if (!product) return res.json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
+  return res.json({ statusCode: 200, data: product })
+})
+
 router.get('/categories', async (req, res) => {
   const categories = await Category.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
