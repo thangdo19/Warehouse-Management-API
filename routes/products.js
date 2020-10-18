@@ -35,8 +35,8 @@ router.get('/:id', async (req, res) => {
       through: { attributes: [] }
     }
   })
-  if (!product) return res.json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
-  return res.json({ statusCode: 200, data: product })
+  if (!product) return res.status(404).json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
+  return res.status(200).json({ statusCode: 200, data: product })
 })
 
 router.get('/categories', async (req, res) => {
@@ -66,7 +66,7 @@ router.get('/categories/:id', async (req, res) => {
 // get products by their warehouse
 router.get('/warehouse/:id', async (req, res) => {
   const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
-  if (!warehouse) return res.json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
+  if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
   const products = await warehouse.getProducts({
     attributes: { exclude: ['createdAt', 'updatedAt'] }
   })
@@ -85,7 +85,7 @@ router.get('/test', [auth], async (req, res) => {
 router.post('/', [auth, validateProduct], async (req, res) => {
   const { warehouseId, actionType } = req.body
   const warehouse = await Warehouse.findOne({ where: { id: warehouseId } })
-  if (!warehouse) return res.json({ statusCode: 400, message: 'Invalid warehouse' })
+  if (!warehouse) return res.status(400).json({ statusCode: 400, message: 'Invalid warehouse' })
   // update product's stock when import/export from warehouse
   const transaction = await sequelize.transaction()
   try {
@@ -93,7 +93,7 @@ router.post('/', [auth, validateProduct], async (req, res) => {
     let product = await Product.findOne({ where: { name: req.body.name }})
     if (!product) {
       // if user want to export a product not exist, response
-      if (actionType === 'EXPORT') return res.json({ statusCode: 400, message: 'Product not found. Cannot export'})
+      if (actionType === 'EXPORT') return res.status(400).json({ statusCode: 400, message: 'Product not found. Cannot export'})
       const warehProd = await createNewProductAndAddRelationship(req, transaction, warehouse)
       // create history, commit & response
       const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
@@ -192,7 +192,7 @@ async function updateStock(req, transaction, warehouse, product, actionType) {
       })
     }
     else if (actionType == 'EXPORT') {
-      if (warehProd.stock < req.body.stock) return res.json({ statusCode: 400, message: 'Not enough stock to export'})
+      if (warehProd.stock < req.body.stock) return res.status(400).json({ statusCode: 400, message: 'Not enough stock to export'})
       warehProd = await warehProd.update({ stock: warehProd.stock - req.body.stock }, {
         transaction: transaction
       })
