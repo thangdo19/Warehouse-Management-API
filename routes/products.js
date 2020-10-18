@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
       through: { attributes: [] }
     }
   })
-  return res.json({ statusCode: 200, data: products })
+  return res.status(200).json({ statusCode: 200, data: products })
 })//oke swagger
 
 router.get('/categories', async (req, res) => {
@@ -33,7 +33,7 @@ router.get('/categories', async (req, res) => {
       attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
     }
   })
-  return res.json({ statusCode: 200, data: categories })
+  return res.status(200).json({ statusCode: 200, data: categories })
 })//oke swagger
 
 router.get('/categories/:id', async (req, res) => {
@@ -46,7 +46,7 @@ router.get('/categories/:id', async (req, res) => {
       attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
     }
   })
-  return res.json({ statusCode: 200, data: category })
+  return res.status(200).json({ statusCode: 200, data: category })
 })//oke swagger
 // get products by their warehouse
 router.get('/warehouse/:id', async (req, res) => {
@@ -55,11 +55,11 @@ router.get('/warehouse/:id', async (req, res) => {
   const products = await warehouse.getProducts({
     attributes: { exclude: ['createdAt', 'updatedAt'] }
   })
-  return res.json({ statusCode: 200, data: products })
+  return res.status(200).json({ statusCode: 200, data: products })
 })
 
 router.get('/test', [auth], async (req, res) => {
-  return res.json({ data: req.user })
+  return res.status(200).json({ data: req.user })
 })
 
 /**
@@ -84,7 +84,7 @@ router.post('/', [auth, validateProduct], async (req, res) => {
       const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
       await createUserHistory(req, transaction, history, req.user.id)
       await transaction.commit()
-      return res.json({ statusCode: 201, data: warehProd })
+      return res.status(201).json({ statusCode: 201, data: warehProd })
     }
     // handle stock when import/export from warehouse
     const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
@@ -92,12 +92,12 @@ router.post('/', [auth, validateProduct], async (req, res) => {
     const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
     await createUserHistory(req, transaction, history, req.user.id)
     await transaction.commit()
-    return res.json({ statusCode: 200, data: warehProd })
+    return res.status(200).json({ statusCode: 200, data: warehProd })
   } 
   catch (error) {
     await transaction.rollback()
     console.log(error)
-    return res.json({
+    return res.status(400).json({
       statusCode: 400,
       message: error.message
     })
@@ -107,9 +107,9 @@ router.post('/', [auth, validateProduct], async (req, res) => {
 router.post('/categories', [auth, validateCategory], async (req, res) => {
   try {
     const category = await Category.create(req.body)
-    return res.json({ statusCode: 201, data: category })
+    return res.status(201).json({ statusCode: 201, data: category })
   } catch (error) {
-    return res.json({ statusCode: 400, message: error.message })
+    return res.status(400).json({ statusCode: 400, message: error.message })
   }
 })//oke swagger
 

@@ -8,14 +8,14 @@ router.get('/', async (req, res) => {
   const warehouses = await Warehouse.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] }
   })
-  return res.json({ statusCode: 200, data: warehouses })
+  return res.status(200).json({ statusCode: 200, data: warehouses })
 })//oke swagger // tra them ve city name
 
 router.get('/:id', async (req, res) => {
   const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
-  if (!warehouse) return res.json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
+  if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
 
-  return res.json({ statusCode: 200, data: warehouse })
+  return res.status(200).json({ statusCode: 200, data: warehouse })
 })//oke swagger
 
 router.get('/cities', async (req, res) => {
@@ -27,7 +27,7 @@ router.get('/cities', async (req, res) => {
       attributes: ['id', 'name', 'address', 'description']
     }
   })
-  return res.json({ statusCode: 200, data: cities })
+  return res.status(200).json({ statusCode: 200, data: cities })
 })//oke swagger
 
 router.get('/cities/:id', async (req, res) => {
@@ -40,17 +40,17 @@ router.get('/cities/:id', async (req, res) => {
       attributes: ['id', 'name', 'address', 'description']
     }
   })
-  return res.json({ statusCode: 200, data: city })
+  return res.status(200).json({ statusCode: 200, data: city })
 })//oke swagger
 
 router.post('/', [auth, validateWarehouse], async (req, res) => {
   const warehouse = await Warehouse.create(req.body)
-  return res.json({ statusCode: 200, data: warehouse })
+  return res.status(200).json({ statusCode: 200, data: warehouse })
 })//oke swagger
 
 router.post('/cities', [auth, validateCity], async (req, res) => {
   const city = await City.create(req.body)
-  return res.json({ statusCode: 200, data: city })
+  return res.status(200).json({ statusCode: 200, data: city })
 })//oke swagger
 
 module.exports = router

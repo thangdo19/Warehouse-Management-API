@@ -8,7 +8,7 @@ const sequelize = require('../db/connection')
 router.get('/', async (req, res) => {
   const permissions = await Permission.findAll()
 
-  return res.json({
+  return res.status(200).json({
     statusCode: 200,
     data: permissions
   })
@@ -16,9 +16,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id/details', async (req, res) => {
   const permission = await Permission.findOne({ where: { id: req.params.id } })
-  if (!permission) return res.json({ statusCode: 404, message: 'Permission not found' })
+  if (!permission) return res.status(404).json({ statusCode: 404, message: 'Permission not found' })
 
-  return res.json({
+  return res.status(200).json({
     statusCode: 200,
     data: await permission.getPermissionDetails({
       attributes: ['actionCode', 'actionName', 'checkAction']
@@ -35,14 +35,14 @@ router.post('/', [auth, validatePermission], async (req, res) => {
     await addDetails(permission.id, transaction)
 
     await transaction.commit()
-    return res.json({
+    return res.status(201).json({
       statusCode: 201,
       data: permission
     })
   } 
   catch (error) {
     await transaction.rollback()
-    return res.json({
+    return res.status(400).json({
       statusCode: 400,
       message: error.message
     })
@@ -69,7 +69,7 @@ router.patch('/:id/details', [auth, validateActions], async (req, res) => {
     }
 
     await transaction.commit()
-    return res.json({
+    return res.status(200).json({
       statusCode: 200
     })
   } 
@@ -77,7 +77,7 @@ router.patch('/:id/details', [auth, validateActions], async (req, res) => {
     console.log(error)
 
     await transaction.rollback()
-    return res.json({
+    return res.status(400).json({
       statusCode: 400,
       message: error.message
     })

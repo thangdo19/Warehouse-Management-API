@@ -12,24 +12,24 @@ router.get('/', async (req, res) => {
   const users = await User.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt', 'password'] }
   })
-  return res.json({
+  return res.status(200).json({
     statusCode: 200,
     data: users
   })
 })//oke swagger
 
 router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (req, res) => {
-  return res.json({ yia: 'pass'})
+  return res.status(200).json({ yia: 'pass'})
 })
 
 router.get('/:id', [auth], async (req, res) => {
   const user = await User.findOne({ where: { id: req.params.id }})
-  if (!user) return res.json({
+  if (!user) return res.status(400).json({
     statusCode: 404,
     message: `User with id "${req.params.id}" not found`
   })
 
-  return res.json({
+  return res.status(200).json({
     statusCode: 200,
     data: user
   })
@@ -47,7 +47,7 @@ router.get('/permissions', async (req, res) => {
     }
   })
   res.status = 200
-  return res.send({
+  return res.status(200).send({
     statusCode: 200,
     data: users
   })
@@ -59,13 +59,13 @@ router.post('/', [validateUser], async (req, res) => {
 
   try {
     const user = await User.create(req.body)
-    return res.json({
+    return res.status(201).json({
       statusCode: 201,
       data: user,
     })
   } 
   catch (error) {
-    return res.json({
+    return res.status(400).json({
       statusCode: 400,
       message: error.message
     })
@@ -74,7 +74,7 @@ router.post('/', [validateUser], async (req, res) => {
 
 router.post('/permissions', [auth, validateUserPermission], async (req, res) => {
   const user = await User.findOne({ where: { id: req.body.userId } })
-  if (!user) return res.json({ statusCode: 404, message: `User with id "${req.body.userId}" not found`})
+  if (!user) return res.status(404).json({ statusCode: 404, message: `User with id "${req.body.userId}" not found`})
 
   const transaction = await sequelize.transaction()
 
@@ -87,14 +87,14 @@ router.post('/permissions', [auth, validateUserPermission], async (req, res) => 
     }
 
     await transaction.commit()
-    return res.json({
+    return res.status(200).json({
       statusCode: 200
     })
   } 
   catch (error) {
     console.log(error)
     await transaction.rollback()
-    return res.json({
+    return res.status(400).json({
       statusCode: 400,
       message: error.message
     })
@@ -104,11 +104,11 @@ router.post('/permissions', [auth, validateUserPermission], async (req, res) => 
 router.delete('/:id', [auth], async (req, res) => {
   const deleted = await User.destroy({ where: { id: req.params.id } })
 
-  if (deleted === 0) return res.json({ 
+  if (deleted === 0) return res.status(404).json({ 
     statusCode: 404,
     message: `User with id "${req.params.id}" not found`
   })
-  else return res.json({
+  else return res.status(200).json({
     statusCode: 200
   })
 })//oke swagger
@@ -118,11 +118,11 @@ router.patch('/:id', [auth, validateUser], async (req, res) => {
     where: { id: req.params.id }
   }))[0] // take the first element which is number of affected rows
   
-  if (affected === 0) return res.json({ 
+  if (affected === 0) return res.status(404).json({ 
     statusCode: 404,
     message: `User with id "${req.params.id}" not found`
   })
-  else return res.json({
+  else return res.status(200).json({
     statusCode: 200
   })
 })//oke swagger
