@@ -34,7 +34,7 @@ function validateCategory(req, res, next) {
     abortEarly: false
   })
   // response when having error
-  if (error) return res.json({ statusCode: 400, message: error.message })
+  if (error) return res.status(400).json({ statusCode: 400, message: error.message })
   else next() // no error
 }
 

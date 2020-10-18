@@ -44,7 +44,7 @@ function validatePermissionDetail(req, res, next) {
     abortEarly: false
   })
   // response when having error
-  if (error) return res.json({ 
+  if (error) return res.status(400).json({ 
     statusCode: 400, 
     message: error.message 
   })
@@ -66,7 +66,7 @@ function validatePatchDetail(req, res, next) {
     abortEarly: false
   })
   // response when having error
-  if (error) return res.json({ 
+  if (error) return res.status(400).json({ 
     statusCode: 400, 
     message: error.message 
   })
@@ -85,7 +85,7 @@ function validateActions(req, res, next) {
     presence: 'required',
     abortEarly: false
   })
-  if (error) return res.json({ status: 400, message: error.message });
+  if (error) return res.status(400).json({ status: 400, message: error.message });
   next()
 }
 

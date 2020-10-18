@@ -67,6 +67,7 @@ router.post('/', [validateUser], async (req, res) => {
   catch (error) {
     return res.status(400).json({
       statusCode: 400,
+      test:'hung',
       message: error.message
     })
   }
