@@ -15,14 +15,14 @@ async function auth(req, res, next) {
       next()
     } 
     catch (error) {
-      return res.json({
+      return res.status(401).json({
         statusCode: 401,
         message: 'Access denied. Invalid token'
       })
     }
   } 
   else {
-    return res.json({
+    return res.status(401).json({
       statusCode: 401,
       message: 'Access denied. No token provided or invalid form of token'
     })
