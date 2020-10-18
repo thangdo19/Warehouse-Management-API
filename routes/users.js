@@ -46,7 +46,8 @@ router.get('/permissions', async (req, res) => {
       through: { attributes: [] }
     }
   })
-  return res.json({
+  res.status = 200
+  return res.send({
     statusCode: 200,
     data: users
   })

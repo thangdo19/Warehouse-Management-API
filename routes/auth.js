@@ -7,13 +7,13 @@ const jwt = require('jsonwebtoken')
 
 router.post('/', [validateAuth], async (req, res) => {
   const user = await User.findOne({ where: { email: req.body.email } })
-  if (!user) return res.json({
+  if (!user) return res.status(401).json({
     statusCode: 401,
     message: 'Invalid email or password'
   })
 
   const isValid = await bcrypt.compare(req.body.password, user.password)
-  if (!isValid) return res.json({
+  if (!isValid) return res.status(401).json({
     statusCode: 401,
     message: 'Invalid email or password'
   })
