@@ -7,19 +7,47 @@ const sequelize = require('../db/connection')
 const bcrypt = require('bcrypt')
 const { auth } = require('../middlewares/auth')
 const { checkAction } = require('../middlewares/check-action')
+const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
+  const options = pagination(req.query)
   const users = await User.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt', 'password'] }
+    attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
+    ...options
   })
   return res.status(200).json({
     statusCode: 200,
-    data: users
+    data: {
+      users,
+      ...options
+    }
   })
 })//oke swagger
 
 router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (req, res) => {
   return res.status(200).json({ yia: 'pass'})
+})
+
+// Get all users with their permissions
+router.get('/permissions', async (req, res) => {
+  const options = pagination(req.query)
+  const users = await User.findAll({
+    attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
+    include: {
+      model: Permission,
+      as: 'permissions',
+      attributes: ['id', 'permissionName'],
+      through: { attributes: [] }
+    },
+    ...options
+  })
+  return res.status(200).send({
+    statusCode: 200,
+    data: {
+      users,
+      ...options
+    }
+  })
 })
 
 router.get('/:id', [auth], async (req, res) => {
@@ -34,24 +62,6 @@ router.get('/:id', [auth], async (req, res) => {
     data: user
   })
 })//oke swagger
-
-// Get all users with their permissions
-router.get('/permissions', async (req, res) => {
-  const users = await User.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
-    include: {
-      model: Permission,
-      as: 'permissions',
-      attributes: ['id', 'permissionName'],
-      through: { attributes: [] }
-    }
-  })
-  res.status = 200
-  return res.status(200).send({
-    statusCode: 200,
-    data: users
-  })
-})
 
 router.post('/', [validateUser], async (req, res) => {
   // hash password

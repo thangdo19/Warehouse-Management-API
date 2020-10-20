@@ -3,12 +3,21 @@ const router = express.Router()
 const { Warehouse, validateWarehouse } = require('../models/Warehouse')
 const { City, validateCity } = require('../models/City')
 const { auth } = require('../middlewares/auth')
+const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
+  const options = pagination(req.query)
   const warehouses = await Warehouse.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] }
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    ...options
   })
-  return res.status(200).json({ statusCode: 200, data: warehouses })
+  return res.status(200).json({ 
+    statusCode: 200,
+    data: {
+      warehouses,
+      ...options
+    } 
+  })
 })//oke swagger // tra them ve city name
 
 router.get('/:id', async (req, res) => {
@@ -19,15 +28,23 @@ router.get('/:id', async (req, res) => {
 })//oke swagger
 
 router.get('/cities', async (req, res) => {
+  const options = pagination(req.query)
   const cities = await City.findAll({ 
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
       model: Warehouse,
       as: 'warehouses',
       attributes: ['id', 'name', 'address', 'description']
-    }
+    },
+    ...options
   })
-  return res.status(200).json({ statusCode: 200, data: cities })
+  return res.status(200).json({ 
+    statusCode: 200, 
+    data: {
+      cities,
+      ...options
+    } 
+  })
 })//oke swagger
 
 router.get('/cities/:id', async (req, res) => {

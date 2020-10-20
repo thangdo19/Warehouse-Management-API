@@ -4,13 +4,18 @@ const { auth } = require('../middlewares/auth')
 const express = require('express')
 const router = express.Router()
 const sequelize = require('../db/connection')
+const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const permissions = await Permission.findAll()
+  const options = pagination(req.query)
+  const permissions = await Permission.findAll({ ...options })
 
   return res.status(200).json({
     statusCode: 200,
-    data: permissions
+    data: {
+      permissions,
+      ...options
+    }
   })
 })//oke swagger
 
