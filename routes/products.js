@@ -10,8 +10,10 @@ const { HistoryType } = require('../models/HistoryType')
 const { History } = require('../models/History')
 const { auth } = require('../middlewares/auth')
 // const { checkAction } = require('../middlewares/check-action')
+const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
+  const options = pagination(req.query)
   const products = await Product.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
@@ -19,9 +21,16 @@ router.get('/', async (req, res) => {
       as: 'warehouses',
       attributes: ['id', 'cityId', 'name'],
       through: { attributes: [] }
+    },
+    ...options
+  })
+  return res.status(200).json({ 
+    statusCode: 200, 
+    data: {
+      products,
+      ...options
     }
   })
-  return res.status(200).json({ statusCode: 200, data: products })
 })//oke swagger
 
 router.get('/:id', async (req, res) => {
@@ -40,15 +49,23 @@ router.get('/:id', async (req, res) => {
 })
 
 router.get('/categories', async (req, res) => {
+  const options = pagination(req.query)
   const categories = await Category.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
       model: Product,
       as: 'products',
       attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
-    }
+    },
+    ...options
   })
-  return res.status(200).json({ statusCode: 200, data: categories })
+  return res.status(200).json({ 
+    statusCode: 200, 
+    data: {
+      categories,
+      ...options
+    } 
+  })
 })//oke swagger
 
 router.get('/categories/:id', async (req, res) => {

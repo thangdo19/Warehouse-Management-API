@@ -2,22 +2,32 @@ const express = require('express')
 const router = express.Router()
 const { History, validateHistory } = require('../models/History')
 const { HistoryType, validateType } = require('../models/HistoryType')
+const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const histories = await History.findAll()
+  const options = pagination(req.query)
+  const histories = await History.findAll({ ...options })
   return res.status(200).json({
     statusCode: 200,
-    data: histories
+    data: {
+      histories,
+      ...options
+    }
   })
 })
 
 router.get('/types', async (req, res) => {
+  const options = pagination(req.query)
   const types = await HistoryType.findAll({ 
-    attributes: { exclude: ['createdAt', 'updatedAt'] }
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    ...options
   })
   return res.status(200).json({
     statusCode: 200,
-    data: types
+    data: {
+      types,
+      ...options
+    }
   })
 })
 
