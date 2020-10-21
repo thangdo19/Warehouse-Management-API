@@ -85,6 +85,7 @@ router.post('/', [validateUser], async (req, res) => {
   }
 })//oke swagger
 
+// add permission to user
 router.post('/permissions', [auth, validateUserPermission], async (req, res) => {
   const user = await User.findOne({ where: { id: req.body.userId } })
   if (!user) return res.status(404).json({ statusCode: 404, message: `User with id "${req.body.userId}" not found`})

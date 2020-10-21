@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const _ = require('lodash')
 const sequelize = require('../db/connection')
-const { Product, validateProduct } = require('../models/Product')
+const { Product, validateProduct, validateManagingProduct } = require('../models/Product')
 const { Category, validateCategory } = require('../models/Category')
 const { Warehouse } = require('../models/Warehouse')
 const { WarehouseProduct } = require('../models/WarehouseProduct')
@@ -54,6 +54,23 @@ router.get('/categories', async (req, res) => {
   })
 })//oke swagger
 
+router.get('/search/:productName', async (req, res) => {
+  const itemCount = await Product.count()
+  const options = pagination(req.query, itemCount)
+  const products = await Product.findAll({
+    where: { name: req.params.productName },
+    attributes: ['id', 'name'],
+    ...options
+  })
+  return res.status(200).json({ 
+    statusCode: 200, 
+    data: {
+      products,
+      ...options
+    }
+  })
+})
+
 router.get('/:id', async (req, res) => {
   const product = await Product.findOne({
     where: { id: req.params.id },
@@ -102,32 +119,35 @@ router.get('/test', [auth], async (req, res) => {
  *        Create new product then import it into the specified warehouse. 
  *        Handle import/export product of users.
  */
-router.post('/', [auth, validateProduct], async (req, res) => {
-  const { warehouseId, actionType } = req.body
-  const warehouse = await Warehouse.findOne({ where: { id: warehouseId } })
-  if (!warehouse) return res.status(400).json({ statusCode: 400, message: 'Invalid warehouse' })
+router.post('/', [auth, validateManagingProduct], async (req, res) => {
   // update product's stock when import/export from warehouse
   const transaction = await sequelize.transaction()
   try {
-    // check if warehouse have this product or not
-    let product = await Product.findOne({ where: { name: req.body.name }})
-    if (!product) {
-      // if user want to export a product not exist, response
-      if (actionType === 'EXPORT') return res.status(400).json({ statusCode: 400, message: 'Product not found. Cannot export'})
-      const warehProd = await createNewProductAndAddRelationship(req, transaction, warehouse)
-      // create history, commit & response
-      const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
-      await createUserHistory(req, transaction, history, req.user.id)
-      await transaction.commit()
-      return res.status(201).json({ statusCode: 201, data: warehProd })
+    for (const eachProduct of req.body.products) {
+      const { warehouseId, actionType } = eachProduct
+      const warehouse = await Warehouse.findOne({ where: { id: warehouseId } })
+      if (!warehouse) return res.status(400).json({ statusCode: 400, message: 'Invalid warehouse' })
+
+      let product = await Product.findOne({ where: { name: eachProduct.name }})
+      if (!product) {
+        // if user want to export a product not exist, response
+        if (actionType === 'EXPORT') return res.status(400).json({ statusCode: 400, message: 'Product not found. Cannot export'})
+        const warehProd = await createNewProductAndAddRelationship(eachProduct, transaction, warehouse)
+        // create history, commit & response
+        const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${warehProd[0].stock}`)
+        await createUserHistory(req, transaction, history, req.user.id)
+      }
+      else {
+        // handle stock when import/export from warehouse
+        const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
+        // done, create history, commit transaction & response
+        const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
+        await createUserHistory(req, transaction, history, req.user.id)
+      }
     }
-    // handle stock when import/export from warehouse
-    const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
-    // done, create history, commit transaction & response
-    const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
-    await createUserHistory(req, transaction, history, req.user.id)
+
     await transaction.commit()
-    return res.status(200).json({ statusCode: 200, data: warehProd })
+    return res.status(200).json({ statusCode: 200 })
   } 
   catch (error) {
     await transaction.rollback()
@@ -161,17 +181,17 @@ async function createWarehouseHistory(actionType, warehouseId, note) {
  * @Usage This function create a new product with data from req param,
  * then create WarehouseProduct middle table between Product & Warehouse and
  * fill with stock prop
- * @param {*} req Request reference
+ * @param {*} product Request reference
  * @param {*} transaction Transaction reference
  * @param {*} warehouse Warehouse reference to add relation with
  */
-async function createNewProductAndAddRelationship(req, transaction, warehouse) {
+async function createNewProductAndAddRelationship(newProduct, transaction, warehouse) {
   try {
     // create product & add relationship to warehouse
-    product = await Product.create(req.body, { transaction: transaction })
+    const product = await Product.create(newProduct, { transaction: transaction })
     const warehProd = await warehouse.addProduct(product.id, { 
       transaction: transaction,
-      through: { stock: req.body.stock } 
+      through: { stock: newProduct.stock } 
     })
     return warehProd
   } 
@@ -228,7 +248,6 @@ async function updateStock(req, transaction, warehouse, product, actionType) {
 async function createUserHistory(req, transaction, history, userId) {
   try {
     const userHistory = await history.addUser(userId, { transaction: transaction })
-    console.log(userHistory)
   } catch (error) {
     throw error
   }
