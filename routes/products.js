@@ -33,22 +33,6 @@ router.get('/', async (req, res) => {
     }
   })
 })//oke swagger
-
-router.get('/:id', async (req, res) => {
-  const product = await Product.findOne({
-    where: { id: req.params.id },
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-    include: {
-      model: Warehouse,
-      as: 'warehouses',
-      attributes: ['id', 'cityId', 'name'],
-      through: { attributes: [] }
-    }
-  })
-  if (!product) return res.status(404).json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
-  return res.status(200).json({ statusCode: 200, data: product })
-})
-
 router.get('/categories', async (req, res) => {
   const itemCount = await Category.count()
   const options = pagination(req.query, itemCount)
@@ -69,6 +53,23 @@ router.get('/categories', async (req, res) => {
     } 
   })
 })//oke swagger
+
+router.get('/:id', async (req, res) => {
+  const product = await Product.findOne({
+    where: { id: req.params.id },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: {
+      model: Warehouse,
+      as: 'warehouses',
+      attributes: ['id', 'cityId', 'name'],
+      through: { attributes: [] }
+    }
+  })
+  if (!product) return res.status(404).json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
+  return res.status(200).json({ statusCode: 200, data: product })
+})
+
+
 
 router.get('/categories/:id', async (req, res) => {
   const category = await Category.findOne({

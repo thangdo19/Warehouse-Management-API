@@ -20,14 +20,6 @@ router.get('/', async (req, res) => {
     } 
   })
 })//oke swagger // tra them ve city name
-
-router.get('/:id', async (req, res) => {
-  const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
-  if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
-
-  return res.status(200).json({ statusCode: 200, data: warehouse })
-})//oke swagger
-
 router.get('/cities', async (req, res) => {
   const itemCount = await City.count()
   const options = pagination(req.query, itemCount)
@@ -48,6 +40,14 @@ router.get('/cities', async (req, res) => {
     } 
   })
 })//oke swagger
+
+router.get('/:id', async (req, res) => {
+  const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
+  if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
+
+  return res.status(200).json({ statusCode: 200, data: warehouse })
+})//oke swagger
+
 
 router.get('/cities/:id', async (req, res) => {
   const city = await City.findOne({ 

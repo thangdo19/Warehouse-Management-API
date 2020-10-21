@@ -149,6 +149,22 @@
                     "required": true,
                     "description": "ID of category that we want to find product",
                     "type": "integer"
+                },{
+                    "in": "query",
+                    "name": "page",
+                    "schema": {
+                        "type": "string"
+                        
+                    }
+                
+                },{
+                    "in": "query",
+                    "name": "path",
+                    "schema": {
+                        "type": "string"
+                        
+                    }
+                
                 }
             ],"get":{
                 "tags": ["Products"],
