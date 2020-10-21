@@ -6,7 +6,8 @@ const { auth } = require('../middlewares/auth')
 const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await Warehouse.count()
+  const options = pagination(req.query, itemCount)
   const warehouses = await Warehouse.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     ...options
@@ -28,7 +29,8 @@ router.get('/:id', async (req, res) => {
 })//oke swagger
 
 router.get('/cities', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await City.count()
+  const options = pagination(req.query, itemCount)
   const cities = await City.findAll({ 
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {

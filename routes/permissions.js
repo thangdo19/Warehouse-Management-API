@@ -7,7 +7,8 @@ const sequelize = require('../db/connection')
 const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await Permission.count()
+  const options = pagination(req.query, itemCount)
   const permissions = await Permission.findAll({ ...options })
 
   return res.status(200).json({

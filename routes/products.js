@@ -13,7 +13,8 @@ const { auth } = require('../middlewares/auth')
 const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await Product.count()
+  const options = pagination(req.query, itemCount)
   const products = await Product.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
@@ -49,7 +50,8 @@ router.get('/:id', async (req, res) => {
 })
 
 router.get('/categories', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await Category.count()
+  const options = pagination(req.query, itemCount)
   const categories = await Category.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {

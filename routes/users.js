@@ -10,7 +10,8 @@ const { checkAction } = require('../middlewares/check-action')
 const pagination = require('../functions/pagination')
 
 router.get('/', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await User.count()
+  const options = pagination(req.query, itemCount)
   const users = await User.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
     ...options
@@ -30,7 +31,8 @@ router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (re
 
 // Get all users with their permissions
 router.get('/permissions', async (req, res) => {
-  const options = pagination(req.query)
+  const itemCount = await User.count()
+  const options = pagination(req.query, itemCount)
   const users = await User.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt', 'password'] },
     include: {
