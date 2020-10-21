@@ -98,6 +98,8 @@ async function addDetails(perId, transaction) {
   const actionNames = [
     'CREATE_USER', 'VIEW_USER', 'EDIT_USER', 'DELETE_USER',
     'CREATE_PERMISSION', 'VIEW_PERMISSION', 'EDIT_PERMISSION', 'DELETE_PERMISSION',
+    'CREATE_WAREHOUSE', 'VIEW_WAREHOUSE', 'EDIT_WAREHOUSE', 'DELETE_WAREHOUSE',
+    'CREATE_PRODUCT', 'VIEW_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT',
   ]
   for (const action of actionNames) {
     await PermissionDetail.create(await createDetail(perId, action), { transaction: transaction })
