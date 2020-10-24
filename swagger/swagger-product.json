@@ -34,7 +34,7 @@
     
                     }, {
                         "in": "query",
-                        "name": "path",
+                        "name": "limit",
                         "schema": {
                             "type": "string"
     
@@ -189,7 +189,7 @@
 
                 }, {
                     "in": "query",
-                    "name": "path",
+                    "name": "limit",
                     "schema": {
                         "type": "string"
 
