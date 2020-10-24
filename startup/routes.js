@@ -42,6 +42,7 @@ module.exports = function(app) {
   app.use('/history', history)
   app.use('/warehouses', warehouses)
   app.use('/products', products)
+
   // error catcher middleware
   app.use(error)
 }

@@ -12,10 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bluebird": "^3.7.2",
     "dotenv": "^8.2.0",
+    "elasticsearch": "^16.7.1",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "faker": "^5.1.0",
+    "get-json": "^1.0.1",
     "joi": "^17.2.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
