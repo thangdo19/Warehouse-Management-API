@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { Op } = require("sequelize");
 const _ = require('lodash')
 const sequelize = require('../db/connection')
 const { Product, validateProduct, validateManagingProduct } = require('../models/Product')
@@ -45,13 +46,13 @@ router.get('/categories', async (req, res) => {
       as: 'products',
       attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
     },
-    ...options
+    // ...options
   })
   return res.status(200).json({ 
     statusCode: 200, 
     data: {
       categories,
-      ...options
+      // ...options
     } 
   })
 })//oke swagger
@@ -60,18 +61,16 @@ router.get('/search/:productName', async (req, res) => {
   const itemCount = await Product.count()
   const options = pagination(req.query, itemCount)
   const products = await Product.findAll({
-    where: { name: req.params.productName },
+    where: { name:{ [Op.like]: `%${req.params.productName}%`} },
     attributes: ['id', 'name'],
-    ...options
   })
   return res.status(200).json({ 
     statusCode: 200, 
     data: {
-      products,
-      ...options
+      products
     }
   })
-})
+})//oke swagger
 
 router.get('/:id', async (req, res) => {
   const product = await Product.findOne({
@@ -86,7 +85,7 @@ router.get('/:id', async (req, res) => {
   })
   if (!product) return res.status(404).json({ statusCode: 404, message: `There is no product with id "${req.params.id}"`})
   return res.status(200).json({ statusCode: 200, data: product })
-})
+})//oke swagger
 
 router.get('/categories/:id', async (req, res) => {
   const category = await Category.findOne({

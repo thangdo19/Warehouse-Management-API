@@ -9,7 +9,7 @@
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "cnpmwarehouse.herokuapp.com",
+    "host": ["cnpmwarehouse.herokuapp.com"],
     "paths": {
         "/products": {
             "get": {
@@ -24,6 +24,22 @@
                             "type": "string",
                             "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
                         }
+                    }, {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
+                    }, {
+                        "in": "query",
+                        "name": "path",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
                     }
                 ],
                 "responses": {
@@ -86,7 +102,20 @@
                     "description": "ID of user that we want to find",
                     "type": "integer"
                 }
-            ]
+            ],
+            "get": {
+                "tags": ["Products"],
+                "summary": "Get  product by ID",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+
+                }
+            }
 
         },
         "/products/categories": {
@@ -141,7 +170,8 @@
                     }
                 }
             }
-        },"/Products/categories/{id}": {
+        },
+        "/Products/categories/{id}": {
             "parameters": [
                 {
                     "name": "id",
@@ -149,24 +179,25 @@
                     "required": true,
                     "description": "ID of category that we want to find product",
                     "type": "integer"
-                },{
+                }, {
                     "in": "query",
                     "name": "page",
                     "schema": {
                         "type": "string"
-                        
+
                     }
-                
-                },{
+
+                }, {
                     "in": "query",
                     "name": "path",
                     "schema": {
                         "type": "string"
-                        
+
                     }
-                
+
                 }
-            ],"get":{
+            ],
+            "get": {
                 "tags": ["Products"],
                 "summary": "Get all product by cateroryID in system",
                 "responses": {
@@ -181,7 +212,8 @@
                 }
             }
 
-        },"/Products/warehouse/{id}": {
+        },
+        "/Products/warehouse/{id}": {
             "parameters": [
                 {
                     "name": "id",
@@ -190,7 +222,8 @@
                     "description": "ID of warehouse that we want to find product",
                     "type": "integer"
                 }
-            ],"get":{
+            ],
+            "get": {
                 "tags": ["Products"],
                 "summary": "Get all product by warehouseID in system",
                 "responses": {
@@ -199,6 +232,32 @@
                         "schema": {
 
                             "$ref": "#/definitions/ProductByID"
+                        }
+                    }
+
+                }
+            }
+
+        },
+        "/Products/search/{productName}": {
+            "parameters": [
+                {
+                    "name": "productName",
+                    "in": "path",
+                    "required": true,
+                    "description": "Name of product to search",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": ["Products"],
+                "summary": "Search products by name",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+
+                            "$ref": "#/definitions/SearchProduct"
                         }
                     }
 
@@ -236,7 +295,8 @@
         "Products": {
             "type": "array",
             "$ref": "#/definitions/Product"
-        },"ProductByWarehouse": {
+        },
+        "ProductByWarehouse": {
             "required": [
                 "name", "id", "categoryId"
             ],
@@ -260,9 +320,9 @@
 
             }
         },
-        "WarehouseProduct":{
+        "WarehouseProduct": {
             "required": [
-                 "id", "warehouseId", "productId","stock"
+                "id", "warehouseId", "productId", "stock"
             ],
             "properties": {
                 "id": {
@@ -368,7 +428,8 @@
 
             }
 
-        },"ProductByCategory": {
+        },
+        "ProductByCategory": {
             "required": [
                 "name", "id"
             ],
@@ -388,7 +449,8 @@
 
             }
 
-        },"ProductWarehouse": {
+        },
+        "ProductWarehouse": {
             "required": [
                 "name", "id"
             ],
@@ -412,6 +474,18 @@
                     "type": "string"
                 },
                 "message": {
+                    "type": "string"
+                }
+
+            }
+        },
+        "SearchProduct": {
+            "required": ["name"],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
 

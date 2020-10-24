@@ -14,6 +14,25 @@
         "/users": {
             "get": {
                 "tags": ["Users"],
+                "parameters": [
+                     {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
+                    }, {
+                        "in": "query",
+                        "name": "path",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
+                    }
+                ],
                 "summary": "Get all users in system",
                 "responses": {
                     "200": {
@@ -257,6 +276,15 @@
     },
     "schemes": ["https"],
     "consumes": ["application/json"],
-    "produces": ["application/json"]
+    "produces": ["application/json"],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
 
 }

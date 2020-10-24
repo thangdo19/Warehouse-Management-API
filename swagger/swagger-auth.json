@@ -86,6 +86,15 @@
     },
     "schemes": ["https"],
     "consumes": ["application/json"],
-    "produces": ["application/json"]
+    "produces": ["application/json"],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
 
 }

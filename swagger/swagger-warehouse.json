@@ -15,6 +15,25 @@
             "get": {
                 "tags": ["Warehouses"],
                 "summary": "Get all warehouses in system",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "string"
+
+                        }
+
+                    }, {
+                        "in": "query",
+                        "name": "path",
+                        "schema": {
+                            "type": "string"
+
+                        }
+
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -117,6 +136,25 @@
             "get": {
                 "tags": ["Cities"],
                 "summary": "Get all cities in system",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
+                    }, {
+                        "in": "query",
+                        "name": "path",
+                        "schema": {
+                            "type": "string"
+    
+                        }
+    
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -163,6 +201,31 @@
                             "$ref": "#/definitions/error400"
                         }
                     }
+                }
+            }
+        },"/warehouses/user": {
+            "parameters": [
+                {
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                    }
+                }
+            ],
+            "get": {
+                "tags": ["Warehouses"],
+                "summary": "Get all warehouse by ID in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Warehouses"
+                        }
+                    }
+
                 }
             }
         }
@@ -265,6 +328,15 @@
     },
     "schemes": ["https"],
     "consumes": ["application/json"],
-    "produces": ["application/json"]
+    "produces": ["application/json"],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
 
 }
