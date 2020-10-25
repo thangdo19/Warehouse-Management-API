@@ -120,6 +120,17 @@ router.get('/test', [auth], async (req, res) => {
  *        Handle import/export product of users.
  */
 router.post('/', [auth, validateManagingProduct], async (req, res) => {
+  // authorization
+  if (req.body.products.length > 0) {
+    const userWarehouse = await UserWarehouse.findOne({ where: {
+      userId: req.user.id,
+      warehouseId: req.body.products[0].warehouseId
+    }})
+    if (!userWarehouse) return res.status(403).json({
+      statusCode: 403,
+      message: 'User cannot access to this warehouse'
+    })
+  }
   // update product's stock when import/export from warehouse
   const transaction = await sequelize.transaction()
   try {
@@ -139,7 +150,11 @@ router.post('/', [auth, validateManagingProduct], async (req, res) => {
       }
       else {
         // handle stock when import/export from warehouse
-        const warehProd = await updateStock(req, transaction, warehouse, product, actionType)
+        const warehProd = await updateStock(eachProduct.stock, transaction, warehouse, product, actionType)
+        if (!warehProd) return res.status(400).json({
+          statusCode: 400,
+          message: 'Not enough stock to export'
+        })
         // done, create history, commit transaction & response
         const history = await createWarehouseHistory(actionType, warehouse.id, `${actionType} amount ${req.body.stock}`)
         await createUserHistory(req, transaction, history, req.user.id)
@@ -204,13 +219,14 @@ async function createNewProductAndAddRelationship(newProduct, transaction, wareh
  * @Usage Find middle record between Warehouse & Product, if not 
  * (product is in another warehouse but not this warehouse) => create one. 
  * When it found. Update the stock when import/export from warehouse
- * @param {*} req 
+ * @param {*} stock 
  * @param {*} transaction 
  * @param {*} warehouse 
  * @param {*} product 
  * @param {*} actionType 
  */
-async function updateStock(req, transaction, warehouse, product, actionType) {
+async function updateStock(stock, transaction, warehouse, product, actionType) {
+  stock = parseInt(stock, 10)
   try {
     // find relationship between warehouse & product
     let warehProd = await WarehouseProduct.findOne({
@@ -227,13 +243,14 @@ async function updateStock(req, transaction, warehouse, product, actionType) {
     }
     // update stock
     if (actionType === 'IMPORT') {
-      warehProd = await warehProd.update({ stock: warehProd.stock + req.body.stock }, {
+        console.log('result:', stock)
+        warehProd = await warehProd.update({ stock: warehProd.stock + stock }, {
         transaction: transaction
       })
     }
     else if (actionType == 'EXPORT') {
-      if (warehProd.stock < req.body.stock) return res.status(400).json({ statusCode: 400, message: 'Not enough stock to export'})
-      warehProd = await warehProd.update({ stock: warehProd.stock - req.body.stock }, {
+      if (warehProd.stock < stock) return null
+      warehProd = await warehProd.update({ stock: warehProd.stock - stock }, {
         transaction: transaction
       })
     }
