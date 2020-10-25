@@ -11,7 +11,12 @@ router.get('/', async (req, res) => {
   const options = pagination(req.query, itemCount)
   const warehouses = await Warehouse.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
-    ...options
+    ...options,
+    include: {
+      model: City,
+      as: 'city',
+      attributes: ['name']
+    }
   })
   return res.status(200).json({ 
     statusCode: 200,
@@ -66,11 +71,33 @@ router.get('/user', [auth], async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
+  const warehouse = await Warehouse.findOne({ 
+    where: { id: req.params.id },
+    include: {
+      model: City,
+      as: 'city',
+      attributes: ['name']
+    }
+  })
   if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
 
   return res.status(200).json({ statusCode: 200, data: warehouse })
 })//oke swagger
+
+router.get('/:id/users', async (req, res) => {
+  const warehouse = await Warehouse.findOne({ 
+    where: { id: req.params.id },
+    include: {
+      model: User,
+      as: 'users',
+      attributes: { exclude: ['password'] },
+      through: { attributes: [] }
+    }
+  })
+  if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
+
+  return res.status(200).json({ statusCode: 200, data: warehouse })
+})
 
 router.get('/cities/:id', async (req, res) => {
   const city = await City.findOne({ 
