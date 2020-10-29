@@ -213,6 +213,22 @@
                         "type": "string",
                         "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
                     }
+                }, {
+                    "in": "query",
+                    "name": "page",
+                    "schema": {
+                        "type": "string"
+
+                    }
+
+                }, {
+                    "in": "query",
+                    "name": "limit",
+                    "schema": {
+                        "type": "string"
+
+                    }
+
                 }
             ],
             "get": {

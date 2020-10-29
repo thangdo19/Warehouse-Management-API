@@ -50,7 +50,13 @@ router.get('/cities', async (req, res) => {
 
 // get warehouse by userId
 router.get('/user', [auth], async (req, res) => {
-  const itemCount = await Warehouse.count()
+  const itemCount = await Warehouse.count({
+    include: {
+      model: User,
+      as: 'users',
+      where: { id: req.user.id }
+    }
+  })
   const options = pagination(req.query, itemCount)
   const warehouses = await Warehouse.findAll({
     include: {

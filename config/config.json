@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "sangpham",
-    "password": "smd@12345",
-    "database": "warehouse",
+    "username": "b787c409ae78b0",
+    "password": "42eee802",
+    "database": "heroku_9d564623159ec1c",
     "logging":true,
-    "host": "113.184.217.230",
+    "host": "eu-cdbr-west-03.cleardb.net",
     "dialect": "mysql"
   },
   "test": {

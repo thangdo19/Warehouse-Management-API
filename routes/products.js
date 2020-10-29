@@ -46,13 +46,13 @@ router.get('/categories', async (req, res) => {
       as: 'products',
       attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt'] }
     },
-    // ...options
+    ...options
   })
   return res.status(200).json({ 
     statusCode: 200, 
     data: {
       categories,
-      // ...options
+      ...options
     } 
   })
 })//oke swagger
@@ -101,12 +101,25 @@ router.get('/categories/:id', async (req, res) => {
 })//oke swagger
 // get products by their warehouse
 router.get('/warehouse/:id', async (req, res) => {
+  const itemCount = await Product.count({
+    include: {
+      model: Warehouse,
+      as: 'warehouses',
+      where: { id: req.params.id }
+    }
+  })
+  const options = pagination(req.query, itemCount)
   const warehouse = await Warehouse.findOne({ where: { id: req.params.id }})
   if (!warehouse) return res.status(404).json({ statusCode: 404, message: `There is no warehouse with id "${req.params.id}"`})
   const products = await warehouse.getProducts({
-    attributes: { exclude: ['createdAt', 'updatedAt'] }
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    ...options
   })
-  return res.status(200).json({ statusCode: 200, data: products })
+  console.log(options)
+  return res.status(200).json({ statusCode: 200, data: {
+    products,
+    ...options
+  } })
 })
 
 router.get('/test', [auth], async (req, res) => {

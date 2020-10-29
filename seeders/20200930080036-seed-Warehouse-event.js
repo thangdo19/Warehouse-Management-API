@@ -2,7 +2,7 @@
 const faker = require('faker')
 
 const warehouses = [...Array(200)].map((warehouse)=>({
-  cityId:parseInt(Math.floor(Math.random() *49) + 1),
+  cityId:parseInt(Math.floor(Math.random() *z) + 1),
   name:faker.address.city(),
   address:faker.address.streetAddress(),
   description:faker.lorem.sentence(),

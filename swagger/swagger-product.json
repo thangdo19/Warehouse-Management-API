@@ -29,17 +29,17 @@
                         "name": "page",
                         "schema": {
                             "type": "string"
-    
+
                         }
-    
+
                     }, {
                         "in": "query",
                         "name": "limit",
                         "schema": {
                             "type": "string"
-    
+
                         }
-    
+
                     }
                 ],
                 "responses": {
@@ -221,6 +221,22 @@
                     "required": true,
                     "description": "ID of warehouse that we want to find product",
                     "type": "integer"
+                }, {
+                    "in": "query",
+                    "name": "page",
+                    "schema": {
+                        "type": "string"
+
+                    }
+
+                }, {
+                    "in": "query",
+                    "name": "limit",
+                    "schema": {
+                        "type": "string"
+
+                    }
+
                 }
             ],
             "get": {
