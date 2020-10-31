@@ -146,10 +146,11 @@ router.get('/search/:productName',async (req,res)=>{
       }
     }
   }
+  var products = []
   await client.search({
     index:'products',  body:body
   }).then(results => {
-    var products = []
+    
     products = results.hits.hits.map(o=>({id:o._source.id,name:o._source.name}))
     console.log('o123',products)
     //console.log("oke2",results.hits.hits)
@@ -164,7 +165,13 @@ router.get('/search/:productName',async (req,res)=>{
   })
   .catch(err=>{
     console.log(err)
-    res.send([]);
+    return res
+        .status(200)
+        .json({
+            statusCode: 200,
+            data:{products:products},
+            total:0
+        })
   });
 })
 
