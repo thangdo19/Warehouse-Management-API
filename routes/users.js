@@ -10,6 +10,7 @@ const { checkAction } = require('../middlewares/check-action')
 const pagination = require('../functions/pagination')
 const { UserWarehouse, validateUserWarehouse } = require('../models/UserWarehouse')
 const { Warehouse } = require('../models/Warehouse')
+const { omit } = require('lodash')
 
 router.get('/', async (req, res) => {
   const itemCount = await User.count()
@@ -136,6 +137,19 @@ router.post('/warehouse', [auth, validateUserWarehouse], async (req, res) => {
     statusCode: 201,
     data: { userWarehouse }
   })
+})
+
+router.patch('/:id', [auth, validateUser], async (req, res) => {
+  const editUserDto = omit(req.body, { email, password })
+  try {
+    const user = await User.findOne({ where: { email: userEmail }})
+    if (!user) return res.status(404).json({ message: "User not found" })
+
+    await User.update(editUserDto, { where: { id: req.params.id }})
+    return res.status(200)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
 })
 
 router.delete('/:id', [auth], async (req, res) => {
