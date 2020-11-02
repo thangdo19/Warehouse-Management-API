@@ -34,6 +34,14 @@ router.get('/', async (req, res) => {
                 attributes: []
             }
         },
+        include: {
+          model: Category,
+          as: 'category',
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          through: {
+            attributes: []
+          }
+        },
         ...options
     })
     return res
@@ -429,6 +437,17 @@ router.post('/categories', [
             .json({statusCode: 400, message: error.message})
     }
 }) //oke swagger
+
+
+router.patch('/:id', [auth, validateProduct], async (req, res) => {
+  try {
+    await Product.update(req.body, { where: { id: req.params.id } })
+    return res.json({ status: 200 })
+  } catch (error) {
+    console.log(error)
+    return res.json({ status: 500 })
+  }
+})
 
 async function createWarehouseHistory(actionType, warehouseId, note) {
     const type = await HistoryType.findOne({
