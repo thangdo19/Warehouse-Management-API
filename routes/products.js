@@ -142,7 +142,7 @@ router.get('/search/:productName',async (req,res)=>{
     from: 0, 
     query: {      
       wildcard: {
-          name: `*${req.params.productName}*`
+          name: `*${req.params.productName.toLocaleLowerCase()}*`
       }
     }
   }
