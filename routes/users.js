@@ -82,7 +82,6 @@ router.post('/', [validateUser], async (req, res) => {
   catch (error) {
     return res.status(400).json({
       statusCode: 400,
-      test:'hung',
       message: error.message
     })
   }
@@ -141,12 +140,13 @@ router.post('/warehouse', [auth, validateUserWarehouse], async (req, res) => {
 
 router.patch('/:id', [auth, validateUser], async (req, res) => {
   const editUserDto = omit(req.body, ['email', 'password'])
+  console.log(editUserDto)
   try {
-    const user = await User.findOne({ where: { email: userEmail }})
+    const user = await User.findOne({ where: { id: req.params.id }})
     if (!user) return res.status(404).json({ message: "User not found" })
 
     await User.update(editUserDto, { where: { id: req.params.id }})
-    return res.status(200)
+    return res.status(200).json()
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -154,12 +154,15 @@ router.patch('/:id', [auth, validateUser], async (req, res) => {
 
 router.patch('/:id/password', [auth, validateUser], async (req, res) => {
   const editUserDto = pick(req.body, ['password'])
+  if (!editUserDto.password || editUserDto.password.length === 0)
+    return res.status(400).json({ message: 'Password is empty'})
+  editUserDto.password = await bcrypt.hash(editUserDto.password, await bcrypt.genSalt())
   try {
-    const user = await User.findOne({ where: { email: userEmail }})
+    const user = await User.findOne({ where: { id: req.params.id }})
     if (!user) return res.status(404).json({ message: "User not found" })
 
     await User.update(editUserDto, { where: { id: req.params.id }})
-    return res.status(200)
+    return res.status(200).json()
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
