@@ -37,10 +37,7 @@ router.get('/', async (req, res) => {
         include: {
           model: Category,
           as: 'category',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
-          through: {
-            attributes: []
-          }
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
         },
         ...options
     })
@@ -245,7 +242,12 @@ router.get('/:id', async (req, res) => {
             through: {
                 attributes: []
             }
-        }
+        },
+        include: {
+          model: Category,
+          as: 'category',
+          attributes: { exclude: ['createdAt', 'updatedAt'] }
+        },
     })
     if (!product) 
         return res
@@ -439,13 +441,20 @@ router.post('/categories', [
 }) //oke swagger
 
 
-router.patch('/:id', [auth, validateProduct], async (req, res) => {
+router.patch('/:id', [ validateProduct], async (req, res) => {
   try {
+    const product = await Product.findOne({ where: { id: req.params.id }})
+    if (!product) return res.status(404).json({ statusCode: 404, message: 'Product not found' })
+    if (req.body.categoryId) {
+        const category = await Category.findOne({ where: { id: req.body.categoryId }})
+        if (!category) return res.status(404).json({ statusCode: 404, message: 'Category not found' })
+    }    
+
     await Product.update(req.body, { where: { id: req.params.id } })
     return res.json({ status: 200 })
   } catch (error) {
     console.log(error)
-    return res.json({ status: 500 })
+    return res.status(500).json({ statusCode: 500 })
   }
 })
 
