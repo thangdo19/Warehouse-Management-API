@@ -10,7 +10,7 @@ const { checkAction } = require('../middlewares/check-action')
 const pagination = require('../functions/pagination')
 const { UserWarehouse, validateUserWarehouse } = require('../models/UserWarehouse')
 const { Warehouse } = require('../models/Warehouse')
-const { omit } = require('lodash')
+const { omit, pick } = require('lodash')
 
 router.get('/', async (req, res) => {
   const itemCount = await User.count()
@@ -140,7 +140,20 @@ router.post('/warehouse', [auth, validateUserWarehouse], async (req, res) => {
 })
 
 router.patch('/:id', [auth, validateUser], async (req, res) => {
-  const editUserDto = omit(req.body, { email, password })
+  const editUserDto = omit(req.body, ['email', 'password'])
+  try {
+    const user = await User.findOne({ where: { email: userEmail }})
+    if (!user) return res.status(404).json({ message: "User not found" })
+
+    await User.update(editUserDto, { where: { id: req.params.id }})
+    return res.status(200)
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+})
+
+router.patch('/:id/password', [auth, validateUser], async (req, res) => {
+  const editUserDto = pick(req.body, ['password'])
   try {
     const user = await User.findOne({ where: { email: userEmail }})
     if (!user) return res.status(404).json({ message: "User not found" })
@@ -156,20 +169,6 @@ router.delete('/:id', [auth], async (req, res) => {
   const deleted = await User.destroy({ where: { id: req.params.id } })
 
   if (deleted === 0) return res.status(404).json({ 
-    statusCode: 404,
-    message: `User with id "${req.params.id}" not found`
-  })
-  else return res.status(200).json({
-    statusCode: 200
-  })
-})//oke swagger
-
-router.patch('/:id', [auth, validateUser], async (req, res) => {
-  const affected = (await User.update(req.body, { 
-    where: { id: req.params.id }
-  }))[0] // take the first element which is number of affected rows
-  
-  if (affected === 0) return res.status(404).json({ 
     statusCode: 404,
     message: `User with id "${req.params.id}" not found`
   })
