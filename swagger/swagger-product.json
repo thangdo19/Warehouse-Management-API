@@ -63,7 +63,7 @@
                         "in": "body",
                         "description": "product that we want to create",
                         "schema": {
-                            "$ref": "#/definitions/AddProduct"
+                            "$ref": "#/definitions/AddProducts"
                         }
                     }, {
                         "in": "header",
@@ -80,7 +80,7 @@
                     "200": {
                         "description": "New product is created",
                         "schema": {
-                            "$ref": "#/definitions/AddProduct"
+                            "$ref": "#/definitions/AddProducts"
                         }
                     },
                     "400": {
@@ -405,6 +405,41 @@
                     "example": "IMPORT||EXPORT"
                 }
 
+            }
+        },
+        "AddProducts": {
+            "type":"object",
+            "properties": {
+            
+            "Products": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "example":"Products1"
+                        },
+                        "categoryId": {
+                            "type": "integer",
+                            "example":1
+                        },
+                        "stock": {
+                            "type": "integer",
+                            "example":123
+                        },
+                        "warehouseId": {
+                            "type": "integer",
+                            "example":141
+                        },
+                        "actionType": {
+                            "type": "string",
+                            "example":"IMPORT||EXPORT"
+                        }
+                    } 
+                }
+                  
+            }
+            
             }
         },
         "Category": {
