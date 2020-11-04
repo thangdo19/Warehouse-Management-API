@@ -55,13 +55,13 @@
             },
             "post": {
                 "tags": ["Products"],
-                "summary": "Create new product in system",
-                "description": "Create new user in system",
+                "summary": "Import or Export product in system",
+                "description": "Import or Export product in system",
                 "parameters": [
                     {
                         "name": "product",
                         "in": "body",
-                        "description": "product that we want to create",
+                        "description": "product that we want to Import or Export",
                         "schema": {
                             "$ref": "#/definitions/AddProducts"
                         }
@@ -78,7 +78,7 @@
                 "produces": ["application/json"],
                 "responses": {
                     "200": {
-                        "description": "New product is created",
+                        "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/AddProducts"
                         }
