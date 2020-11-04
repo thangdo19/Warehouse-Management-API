@@ -6,7 +6,7 @@ const { auth } = require('../middlewares/auth')
 const pagination = require('../functions/pagination')
 const { User } = require('../models/User')
 
-router.get('/', async (req, res) => {
+router.get('/',  [auth],async (req, res) => {
   const itemCount = await Warehouse.count()
   const options = pagination(req.query, itemCount)
   const warehouses = await Warehouse.findAll({
@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
   })
 })//oke swagger // tra them ve city name
 
-router.get('/cities', async (req, res) => {
+router.get('/cities',  [auth],async (req, res) => {
   const itemCount = await City.count()
   const options = pagination(req.query, itemCount)
   const cities = await City.findAll({ 
@@ -76,7 +76,7 @@ router.get('/user', [auth], async (req, res) => {
   })
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',  [auth],async (req, res) => {
   const warehouse = await Warehouse.findOne({ 
     where: { id: req.params.id },
     include: {
@@ -90,7 +90,7 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json({ statusCode: 200, data: warehouse })
 })//oke swagger
 
-router.get('/:id/users', async (req, res) => {
+router.get('/:id/users', [auth], async (req, res) => {
   const warehouse = await Warehouse.findOne({ 
     where: { id: req.params.id },
     include: {
@@ -105,7 +105,7 @@ router.get('/:id/users', async (req, res) => {
   return res.status(200).json({ statusCode: 200, data: warehouse })
 })
 
-router.get('/cities/:id', async (req, res) => {
+router.get('/cities/:id',  [auth],async (req, res) => {
   const city = await City.findOne({ 
     where: { id: req.params.id },
     attributes: { exclude: ['createdAt', 'updatedAt'] },

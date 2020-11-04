@@ -15,7 +15,15 @@
             "get": {
                 "tags": ["Warehouses"],
                 "summary": "Get all warehouses in system",
-                "parameters": [
+                "parameters": [{
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                    }
+                },
                     {
                         "in": "query",
                         "name": "page",
@@ -85,7 +93,15 @@
 
         },
         "/warehouses/{id}": {
-            "parameters": [
+            "parameters": [{
+                "in": "header",
+                "name": "Authorization",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                }
+            },
                 {
                     "name": "id",
                     "in": "path",
@@ -109,7 +125,15 @@
             }
         },
         "/warehouses/cities/{id}": {
-            "parameters": [
+            "parameters": [{
+                "in": "header",
+                "name": "Authorization",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                }
+            },
                 {
                     "name": "id",
                     "in": "path",
@@ -136,7 +160,15 @@
             "get": {
                 "tags": ["Cities"],
                 "summary": "Get all cities in system",
-                "parameters": [
+                "parameters": [{
+                    "in": "header",
+                    "name": "Authorization",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "example": "Bearer sYFuat5lz1y5v0LrCt7LfqJpo1AkdLgm7LbY6eRibN4NYw9Srf6aMIRJM8KbTwM6"
+                    }
+                },
                     {
                         "in": "query",
                         "name": "page",

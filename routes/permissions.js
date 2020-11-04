@@ -6,7 +6,7 @@ const router = express.Router()
 const sequelize = require('../db/connection')
 const pagination = require('../functions/pagination')
 
-router.get('/', async (req, res) => {
+router.get('/',  [auth],async (req, res) => {
   const itemCount = await Permission.count()
   const options = pagination(req.query, itemCount)
   const permissions = await Permission.findAll({ ...options })
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
   })
 })//oke swagger
 
-router.get('/:id/details', async (req, res) => {
+router.get('/:id/details',  [auth],async (req, res) => {
   const permission = await Permission.findOne({ where: { id: req.params.id } })
   if (!permission) return res.status(404).json({ statusCode: 404, message: 'Permission not found' })
 

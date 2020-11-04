@@ -12,7 +12,7 @@ const { UserWarehouse, validateUserWarehouse } = require('../models/UserWarehous
 const { Warehouse } = require('../models/Warehouse')
 const { omit, pick } = require('lodash')
 
-router.get('/', async (req, res) => {
+router.get('/', [auth], async (req, res) => {
   const itemCount = await User.count()
   const options = pagination(req.query, itemCount)
   const users = await User.findAll({
@@ -33,7 +33,7 @@ router.get('/test', [auth, checkAction(['CREATE_USER', 'EDIT_USER'])], async (re
 })
 
 // Get all users with their permissions
-router.get('/permissions', async (req, res) => {
+router.get('/permissions', [auth], async (req, res) => {
   const itemCount = await User.count()
   const options = pagination(req.query, itemCount)
   const users = await User.findAll({
@@ -68,7 +68,7 @@ router.get('/:id', [auth], async (req, res) => {
   })
 })//oke swagger
 
-router.post('/', [validateUser], async (req, res) => {
+router.post('/', [auth,validateUser], async (req, res) => {
   // hash password
   req.body.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt())
 

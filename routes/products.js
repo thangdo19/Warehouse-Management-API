@@ -17,7 +17,7 @@ const client = require('../db/esConnection')
 // const { checkAction } = require('../middlewares/check-action')
 const pagination = require('../functions/pagination')
 
-router.get('/', async (req, res) => {
+router.get('/', [auth], async (req, res) => {
     const itemCount = await Product.count()
     const options = pagination(req.query, itemCount)
     const products = await Product.findAll({
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
         })
 }) //oke swagger
 
-router.post('/insetProducts', async (req, res) => {
+router.post('/insertProducts', async (req, res) => {
     const products = await Product.findAll({
         attributes: {
             exclude: ['createdAt', 'updatedAt', 'categoryId', 'note']
@@ -141,7 +141,7 @@ router.post('/deleteEsProduct/:id', async (req, res) => {
     })
 })
 //search by Elasticsearch
-router.get('/search/:productName',async (req,res)=>{
+router.get('/search/:productName', [auth],async (req,res)=>{
   let body = {
     size: 100,
     from: 0, 
@@ -180,7 +180,7 @@ router.get('/search/:productName',async (req,res)=>{
   });
 })
 
-router.get('/categories', async (req, res) => {
+router.get('/categories',  [auth],async (req, res) => {
     const itemCount = await Category.count()
     const options = pagination(req.query, itemCount)
     const categories = await Category.findAll({
@@ -225,7 +225,7 @@ router.get('/categories', async (req, res) => {
 //             }})
 // }) //oke swagger
 
-router.get('/:id', async (req, res) => {
+router.get('/:id',  [auth],async (req, res) => {
     const product = await Product.findOne({
         where: {
             id: req.params.id
@@ -260,7 +260,7 @@ router.get('/:id', async (req, res) => {
         .json({statusCode: 200, data: product})
 }) //oke swagger
 
-router.get('/categories/:id', async (req, res) => {
+router.get('/categories/:id', [auth], async (req, res) => {
     const category = await Category.findOne({
         where: {
             id: req.params.id
@@ -281,7 +281,7 @@ router.get('/categories/:id', async (req, res) => {
         .json({statusCode: 200, data: category})
 }) //oke swagger
 // get products by their warehouse
-router.get('/warehouse/:id', async (req, res) => {
+router.get('/warehouse/:id', [auth], async (req, res) => {
     const itemCount = await Product.count({
         include: {
             model: Warehouse,
@@ -441,7 +441,7 @@ router.post('/categories', [
 }) //oke swagger
 
 
-router.patch('/:id', [ validateProduct], async (req, res) => {
+router.patch('/:id', [ auth,validateProduct], async (req, res) => {
   try {
     const product = await Product.findOne({ where: { id: req.params.id }})
     if (!product) return res.status(404).json({ statusCode: 404, message: 'Product not found' })
