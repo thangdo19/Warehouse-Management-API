@@ -489,10 +489,6 @@
                                 "type": "string",
                                 "example": "Products1"
                             },
-                            "categoryId": {
-                                "type": "integer",
-                                "example": 1
-                            },
                             "stock": {
                                 "type": "integer",
                                 "example": 123
