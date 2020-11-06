@@ -423,7 +423,7 @@ router.post('/', [
             .status(400)
             .json({statusCode: 400, message: error.message})
     }
-}) //chua xong
+}) //oke swagger
 
 router.post('/categories', [
     auth, validateCategory

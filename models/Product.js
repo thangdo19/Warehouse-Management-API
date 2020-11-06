@@ -48,7 +48,7 @@ function validateManagingProduct(req, res, next) {
   const schema = Joi.object({
     products: Joi.array().items(
       Joi.object({
-        categoryId: Joi.number(),
+        categoryId: Joi.number().optional(),
         warehouseId: Joi.number(),
         name: Joi.string().max(255),
         note: Joi.string().max(255).optional(),
