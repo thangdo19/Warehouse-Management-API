@@ -19,7 +19,12 @@ router.post('/', [validateAuth], async (req, res) => {
   })
 
   // authenticate success
-  const payload = { id: user.id }
+  const permissions = await user.getPermissions()
+  const permissionIds = permissions.map(p => {
+    return { id: p.id, permission: p.permissionName }
+  })
+
+  const payload = { id: user.id, permissionIds }
   return res.status(200).json({ statusCode: 200, token: await jwt.sign(payload, process.env.JWT_KEY)})
 })
 
