@@ -5,6 +5,7 @@ const { City, validateCity } = require('../models/City')
 const { auth } = require('../middlewares/auth')
 const pagination = require('../functions/pagination')
 const { User } = require('../models/User')
+const { checkAction } = require('../middlewares/check-action')
 
 router.get('/',  [auth],async (req, res) => {
   const itemCount = await Warehouse.count()
@@ -122,6 +123,25 @@ router.post('/', [auth, validateWarehouse], async (req, res) => {
   const warehouse = await Warehouse.create(req.body)
   return res.status(200).json({ statusCode: 200, data: warehouse })
 })//oke swagger
+
+/**
+ * Apply a user to a warehouse
+ */
+router.post('/user', [auth, checkAction(['EDIT_USER', 'EDIT_WAREHOUSE'])], async (req, res) => {
+  const { warehouseId, userId } = req.body
+  if (!warehouseId || !userId) {
+    return res.status(400).json({ message: 'Missing warehouseId or userId' })
+  }
+
+  const warehouse = await Warehouse.findOne({ where: { id: warehouseId }})
+  if (!warehouse) return status(404).json({ message: 'Warehouse not found' })
+
+  const user = await User.findOne({ where: { id: userId }})
+  if (!user) return status(404).json({ message: 'User not found' })
+
+  await warehouse.addUsers(userId)
+  return res.status(200).json({ statusCode: 200 })
+})
 
 router.post('/cities', [auth, validateCity], async (req, res) => {
   const city = await City.create(req.body)
