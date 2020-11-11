@@ -271,10 +271,21 @@ let body = {
   size: 100,
   from: 0, 
   query: {
-    query_string: {
-      fields: ["name", "phone","email"],
-      query: `*${req.params.text.toLocaleLowerCase()}*`
+    bool:{
+      should:[
+        {
+          query_string: {
+          fields: ["name", "phone"],
+          query: `*${req.params.text.toLocaleLowerCase()}*`
+        }},
+        {
+          match_phrase_prefix : {
+            email: `*${req.params.text.toLocaleLowerCase()}*`
+        }
+        }
+      ]
     }
+    
   }
 }
 var users = []
