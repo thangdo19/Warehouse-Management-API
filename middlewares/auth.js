@@ -1,6 +1,5 @@
 const { User } = require('../models/User')
 const jwt = require('jsonwebtoken')
-
 /**
  * @Usage Authenticate via jwt Bearer token with Authorization header
  */
