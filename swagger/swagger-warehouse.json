@@ -275,6 +275,32 @@
                     }
 
                 }
+            },"post": {
+                "tags": ["Warehouses"],
+                "summary": "Add new user to warehouse in system",
+                "description": "Add new user to warehouse",
+                "parameters": [
+                    {
+                        "name": "warehouse",
+                        "in": "body",
+                        "description": "Add new user to warehouse",
+                        "schema": {
+                            "$ref": "#/definitions/AddUser"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Cannot create warehouse",
+                        "schema": {
+                            "$ref": "#/definitions/error400"
+                        }
+                    }
+                }
             }
         }
 
@@ -341,6 +367,18 @@
                     "type": "string"
                 },
                 "description": {
+                    "type": "string"
+                }
+            }
+        },"AddUser": {
+            "required": [
+                "userId", "warehouseId"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "warehouseId": {
                     "type": "string"
                 }
             }
