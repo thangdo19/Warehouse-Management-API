@@ -12,7 +12,7 @@ const { UserWarehouse, validateUserWarehouse } = require('../models/UserWarehous
 const { Warehouse } = require('../models/Warehouse')
 const { omit, pick } = require('lodash')
 
-router.get('/', [auth], async (req, res) => {
+router.get('/', [auth, checkAction(['VIEW_USER'])], async (req, res) => {
   const itemCount = await User.count()
   const options = pagination(req.query, itemCount)
   const users = await User.findAll({
