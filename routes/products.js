@@ -71,40 +71,17 @@ router.post('/insertProducts', async (req, res) => {
         });
 
         bulkBody.push(item);
-    });
 
-    client.bulk({index: 'test', body: bulkBody})
+    });
+    console.log(bulkBody)
+    client.bulk({index: 'products', body: bulkBody})
 
     return res
         .status(200)
         .json({msg: 'Insert elasticsearch success'})
 
 })
-router.post('/updateEsProduct/:id', async (req, res) => {
-    console.log('Dasd', req.params.id)
-    client
-        .update({
-            index: "products",
-            id: req.params.id,
-            body: {
-                doc: {
-                    name: req.body.name
-                }
-            }
-        })
-        .then(function (resp) {
-            console.log("Successful update! The response was: ", resp);
-            return res
-                .status(200)
-                .json({msg: 'Update elasticsearch success'})
-        }, function (err) {
-            console.trace(err.message);
-            return res
-                .status(400)
-                .json({msg: 'Update elasticsearch unsuccess'})
-        });
 
-})
 router.post('/updateEsProduct/:id', async (req, res) => {
     console.log('Dasd', req.params.id)
     client

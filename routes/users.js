@@ -11,6 +11,7 @@ const pagination = require('../functions/pagination')
 const { UserWarehouse, validateUserWarehouse } = require('../models/UserWarehouse')
 const { Warehouse } = require('../models/Warehouse')
 const { omit, pick } = require('lodash')
+const client = require('../db/esConnection')
 
 router.get('/', [auth, checkAction(['VIEW_USER'])], async (req, res) => {
   const itemCount = await User.count()
@@ -68,12 +69,30 @@ router.get('/:id', [auth], async (req, res) => {
   })
 })//oke swagger
 
-router.post('/', [auth,validateUser], async (req, res) => {
+router.post('/', [validateUser], async (req, res) => {
   // hash password
   req.body.password = await bcrypt.hash(req.body.password, await bcrypt.genSalt())
 
   try {
     const user = await User.create(req.body)
+
+    let bulkBody = []
+    bulkBody.push({
+      index: {
+        _index: "users",
+        _type: "_doc",
+        _id: user.id
+    }}
+    )
+    let temp = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+    }
+    bulkBody.push(temp)
+
+  client.bulk({index: 'users', body: bulkBody})
     return res.status(201).json({
       statusCode: 201,
       data: user,
@@ -179,5 +198,109 @@ router.delete('/:id', [auth], async (req, res) => {
     statusCode: 200
   })
 })//oke swagger
+
+router.post('/insertUsers', async (req, res) => {
+  const users = await User.findAll({
+      attributes: {
+          exclude: ['createdAt', 'updatedAt', 'address','password']
+      }
+  })
+  console.log("asd", JSON.stringify(users))
+  let bulkBody = [];
+
+  users.forEach(item => {
+      bulkBody.push({
+          index: {
+              _index: "users",
+              _type: "_doc",
+              _id: item.id
+          }
+      });
+
+      bulkBody.push(item);
+  });
+
+  client.bulk({index: 'users', body: bulkBody})
+
+  return res
+      .status(200)
+      .json({msg: 'Insert elasticsearch success'})
+
+})
+
+router.post('/updateEsProduct/:id', async (req, res) => {
+  console.log('Dasd', req.params.id)
+  client
+      .update({
+          index: "users",
+          id: req.params.id,
+          body: {
+              doc: {
+                  name: req.body.name,
+                  email:req.body.email,
+                  phone:req.body.phone
+              }
+          }
+      })
+      .then(function (resp) {
+          console.log("Successful update! The response was: ", resp);
+          return res
+              .status(200)
+              .json({msg: 'Update elasticsearch success'})
+      }, function (err) {
+          console.trace(err.message);
+          return res
+              .status(400)
+              .json({msg: 'Update elasticsearch unsuccess'})
+      });
+
+})
+
+router.post('/deleteEsProduct/:id', async (req, res) => {
+await client.delete({
+    index: "products",
+    id: req.params.id
+  });
+  return res .status(200).json({
+    msg: 'Update elasticsearch success'
+  })
+})
+//search by Elasticsearch
+router.get('/search/:text', [auth],async (req,res)=>{
+let body = {
+  size: 100,
+  from: 0, 
+  query: {
+    query_string: {
+      fields: ["name", "phone","email"],
+      query: `*${req.params.text.toLocaleLowerCase()}*`
+    }
+  }
+}
+var users = []
+await client.search({
+  index:'users',  body:body
+}).then(results => {
+  users = results.hits.hits.map(o=>({id:o._source.id,name:o._source.name,phone:o._source.phone,email:o._source.email}))
+  console.log('o123',users)
+  return res
+      .status(200)
+      .json({
+          statusCode: 200,
+          data:{users:users},
+          total:results.hits.hits.length
+      })
+})
+.catch(err=>{
+  console.log(err)
+  return res
+      .status(200)
+      .json({
+          statusCode: 200,
+          data:{users:users},
+          total:0
+      })
+});
+})
 
 module.exports = router
